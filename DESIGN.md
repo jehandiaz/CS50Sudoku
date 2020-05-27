@@ -43,15 +43,17 @@ Output: If "create" is given as command-line argument, a 9x9 sudoku puzzle with 
 
 ### Functional decomposition into modules
 
-We anticipate the following modules or functions:
+We anticipate the following modules or functions: (specift which are create and which are solve)
 
  1. *main*, which parses arguments and initializes other modules
  2. *createGrid*
- 3. *fillNumbers*
- 4. *removeNumbers*
- 5. *checkUnique* all above for create
- 6. *validatePuzzle* 
- 7. 
+ 3. *fillNumbers* 
+ 4. *removeNumbers* which takes complete puzzle, removes values, and makes sure solution is still unique for each removed value
+ 5. *checkUnique* which checks to make sure a given puzzle has only one solution
+ 6. *printPuzzle* which prints a given puzzle to stdout
+ 7. *validatePuzzle* 
+ 8. 
+
 
 And some helper modules that provide data structures:
 
@@ -64,7 +66,7 @@ The crawler will run as follows:
 
 1. execute from a command line as shown in the User Interface
 2. parse the command line, validate parameters, initialize other modules
-3.
+3. 
 
 A good implementation will not necessarily encode all the above code in a single, deeply-nested function; part of the Implementation Spec is to break the pseudocode down into a cleanly arranged set of functions.
 
