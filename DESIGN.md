@@ -5,32 +5,22 @@ title: Team Rocket Sudoku Design Spec
 
 Sudoku is well known logic puzzle where numbers between 1 and 9 are placed on a 9x9 grid of cells. The placement of numbers has to follow certain rules. There are many variations of Sudoku, but for this project you will be looking at only the most common version of Sudoku. In this version the 9x9 grid is further divided into 9 square shaped regions of size 3x3 as shown below.
 
-A Design Spec should contain several sections:
-
-* User interface
-* Inputs and Outputs
-* Functional decomposition into modules
-* Pseudo code for logic/algorithmic flow
-* Dataflow through modules
-* Major data structures
-* Testing plan
-
-Let's look through each.
-
 ### User interface
 
-The Sudoku's only interface with the user is on the command-line; it must always have one arguments.
+The Sudoku's only interface with the user is on the command-line; it must always have one argument.
 
-```
+```bash
 sudoku action
 ```
 
 For example:
 
-``` bash
-$ ./sudoku create
-$ ./sudoku solve
+```bash
+./sudoku create
+./sudoku solve
 ```
+
+Additional elements of UI may be added as the project progresses per the needs of the end user.
 
 ### Inputs and outputs
 
@@ -38,90 +28,75 @@ Input: the only inputs are command-line parameters; see the User Interface above
 
 Output: If "create" is given as command-line argument, a 9x9 sudoku puzzle with empty spaces is displayed in stdout. If "solve" is given as command-line argument, the sudoku puzzle just outputted by "create" is solved then outputted to stdout. The sudoku puzzle is represented as 9 lines in the following format, where zeroes imply empty slots:
 
- * 1 2 3 4 5 6 7 8 9
- * 1 0 2 3 0 9 1 2 4
+```text
+[R0] 1 2 3 4 5 6 7 8 9
+[R1] 1 0 2 3 0 9 1 2 4
+...
+[R8] 0 9 3 4 5 7 0 0 0
+```
 
 ### Functional decomposition into modules
 
 We anticipate the following modules or functions:
 
- 1. *main*, which parses arguments and initializes other modules
- 2. *createGrid*
- 3. *fillNumbers*
- 4. *removeNumbers*
- 5. *checkUnique* all above for create
- 6. *validatePuzzle* 
- 7. 
+* **main** which parses arguments and initializes other modules
+
+* **generateBoard** which initializes and returns an empty `sudoku_t` data structure
+* **populateBoard** which takes an empty board and returns a filled board
+* **generateRandomGrid** which randomly fills a specified 3x3 area within a passed board
+* **removeNumbers** which takes a complete board, removes values, and makes sure solution is still unique for each removed value
+
+* **solve** which takes a passed sudoku board and solves it, assuming the board has only one solution, else return error
+* **printBoard** which prints a given board to stdout
+* **loadBoard** which reads from `stdin` and loads the board into a valid board structure
 
 And some helper modules that provide data structures:
 
- 1. *bag* of pages we have yet to explore
- 4. *hashtable* of URLs we've seen so far
+* **set** which we will use to validate that a board has a unique solution and that it follows the rules of sudoku
+* **sudoku_t** which is a modified version of a 2D array that holds both its size and its values (see below)
 
 ### Pseudo code for logic/algorithmic flow
 
-The crawler will run as follows:
+The `sudoku` module will run with the command line arguments shown above. **Note:** if `solve` is selected a valid string representation of a `sudoku_t` must be piped in to `stdin`.
 
-1. execute from a command line as shown in the User Interface
-2. parse the command line, validate parameters, initialize other modules
-3.
-
-A good implementation will not necessarily encode all the above code in a single, deeply-nested function; part of the Implementation Spec is to break the pseudocode down into a cleanly arranged set of functions.
-
-Notice that our pseudocode says nothing about the order in which it crawls webpages; since it presumably pulls them out of a *bag*, and a *bag* abstract data structure explicitly denies any promise about the order of items removed from a bag, we can't expect any particular crawl order.
-That's ok.
-The result may or may not be a Breadth-First Search, but for the crawler we don't care about the order as long as we explore everything within the `maxDepth` neighborhood.
-
-The crawler completes and exits when it has nothing left in its bag - no more pages to be crawled.
-The maxDepth parameter indirectly determines the number of pages that the crawler will retrieve.
-
+Pseudocode for the operation of the module is shown below in **Dataflow through modules** section.
 
 ### Dataflow through modules
 
- 1. *main* parses parameters and passes them to the crawler.
- 2. *crawler* uses a bag to track pages to explore, and hashtable to track pages seen; when it explores a page it gives the page URL to the pagefetcher, then the result to pagesaver, then to the pagescanner.
- 3. *pagefetcher* fetches the contents (HTML) for a page from a URL and returns.
- 4. *pagesaver* outputs a page to the appropriate file.
- 4. *pagescanner* extracts URLs from a page and returns one at a time.
+* **main** which parses arguments and checks whether to run *create* or *solve* functionality
+
+#### Create
+
+* **generateBoard** initializes an empty `sudoku_t` structure and passes it to **populateBoard**
+* **generateRandomGrid** takes a pointer to the `sudoku_t` board and fills the 3x3 grid specified by **populateBoard**
+* **populateBoard** which takes an empty board and runs **generateRandomGrid** on the diagonal 3x3 squares within the board
+* **removeNumbers** which takes complete puzzle from **populateBoard**, removes 40+ values, and makes sure there is still only one solution using **solveBoard**
+* **printBoard** prints the created board to `stdout`
+
+#### Solve
+
+* **loadBoard** which reads the passed board (if a valid board is passed) from `stdin` and loads the board into a valid `sudoku_t` structure
+* **solveBoard** which takes a passed `sudoku_t` from **loadBoard** and solves it, assuming the board has only one solution, and returns an error if not
+* **printBoard** prints the solved board to `stdout`
 
 ### Major data structures
 
-Three helper modules provide data structures:
+Helper modules that provide data structures:
 
- 1. *bag* of page (URL, depth) structures
- 2. *set* of URLs (indirectly used by hashtable)
- 4. *hashtable* of URLs
+* **set** which we will use to validate that a board has a unique solution and that it follows the rules of sudoku
+* **sudoku_t** which is a modified version of a 2D array that holds both its size and its values (see below)
+
+```c
+typedef struct sudoku {
+  int **board; // Points to a 2D array of values holding the board
+  int dimension; // Tells parsers how long each row and column are
+} sudoku_t;
+```
 
 ### Testing plan
 
-*Unit testing*.  A small test program in `testing.sh` to test each module to make sure it does what it's supposed to do.
+**Unit testing** - A small test program in `testing.sh` to test each module to make sure it does what it's supposed to do.
 
-*Integration testing*.  Assemble the crawler and test it as a whole using `testing.sh`.
-In each case, examine the output files carefully to be sure they have the contents of the correct page, with the correct URL, and the correct depth.
-Ensure that no pages are missing or duplicated.
-Print "progress" indicators from the crawler as it proceeds (e.g., print each URL explored, and each URL found in the pages it explores) so you can watch its progress as it runs.
+**Integration testing** - We will take known sudoku boards and run them through the *solver*, and then check the output against the valid solutions that we know to be true. Once this is done, we will also test the *create* functionality using the solver module, which we can run generated sudoku boards through to make sure they are valid.
 
-0. Test the program with various forms of incorrect command-line arguments to ensure that its command-line parsing, and validation of those parameters, works correctly.
-
-0. Test the crawler with a `seedURL` that points to a non-existent server.
-
-0. Test the crawler with a `seedURL` that points to a non-internal server.
-
-0. Test the crawler with a `seedURL` that points to a valid server but non-existent page.
-
-1. Crawl a simple, closed set of cross-linked web pages to crawl.
-Ensure that some page(s) are mentioned multiple times within a page, and multiple times across the set of pages.
-Ensure there is a loop (a cycle in the graph of pages).
-In such a little site, you know exactly what set of pages should be crawled, at what depths, and you know where your program might trip up.
-
-2. Point the crawler at a page in that site, and explore at depths 0, 1, 2, 3, 4, 5.
-Verify that the files created match expectations.
-
-2. Repeat with a different seed page in that same site.
-If the site is indeed a graph, with cycles, there should be several interesting starting points.
-
-3. Point the crawler at our Wikipedia playground.
-Explore at depths 0, 1, 2.
-(It takes a long time to run at depth 2 or higher!) Verify that the files created match expectations.
-
-5. When you are confident that your crawler runs well, test it on a part of our playground or with a greater depth - but be ready to kill it if it seems to be running amok.
+**Fuzztesting** - We will create a program that continuously generates sudoku boards using the *create* functionality and then runs these through the solver. If any boards are labeled invalid by the solver we will check them manually to determine if the error is within the *create* or *solve* functional modules.
