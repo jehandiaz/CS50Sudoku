@@ -45,6 +45,7 @@ We anticipate the following modules or functions:
 * **populateBoard** which takes an empty board and returns a filled board
 * **generateRandomGrid** which randomly fills a specified 3x3 area within a passed board
 * **removeNumbers** which takes a complete board, removes values, and makes sure solution is still unique for each removed value
+* **deleteBoard** which takes a `sudoku_t` module and frees all associated memory
 
 * **solve** which takes a passed sudoku board and solves it, assuming the board has only one solution, else return error
 * **printBoard** which prints a given board to stdout
@@ -72,12 +73,14 @@ Pseudocode for the operation of the module is shown below in **Dataflow through 
 * **populateBoard** which takes an empty board and runs **generateRandomGrid** on the diagonal 3x3 squares within the board
 * **removeNumbers** which takes complete puzzle from **populateBoard**, removes 40+ values, and makes sure there is still only one solution using **solveBoard**
 * **printBoard** prints the created board to `stdout`
+* **deleteBoard** which takes the board and frees all associated memory
 
 #### Solve
 
 * **loadBoard** which reads the passed board (if a valid board is passed) from `stdin` and loads the board into a valid `sudoku_t` structure
 * **solveBoard** which takes a passed `sudoku_t` from **loadBoard** and solves it, assuming the board has only one solution, and returns an error if not
 * **printBoard** prints the solved board to `stdout`
+* **deleteBoard** which takes the board and frees all associated memory
 
 ### Major data structures
 
