@@ -15,7 +15,10 @@
 #ifndef __BOARD_H
 #define __BOARD_H
 
-typedef struct sudoku sudoku_t;
+typedef struct sudoku {
+  int **board; // Points to a 2D array of values holding the board
+  int dimension; // Tells parsers how long each row and column are
+} sudoku_t;
 
 /************ generateBoard ************/
 /*
@@ -29,19 +32,6 @@ typedef struct sudoku sudoku_t;
  *  Calling deleteBoard on the returned sudoku_t
  */
 sudoku_t *generateBoard();
-
-/************ populateBoard ************/
-/*
- * Takes a sudoku board and fills it in completely using the solver functionality
- * 
- * Caller provides:
- *  A valid sudoku board
- * We guarantee:
- *  A board with one solution is returned
- * Caller is responsible for:
- *  Nothing
- */
-bool populateBoard(sudoku_t *b);
 
 
 /************ printBoard ************/

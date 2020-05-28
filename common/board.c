@@ -7,11 +7,6 @@
 
 #include "board.h"
 
-typedef struct sudoku {
-  int **board; // Points to a 2D array of values holding the board
-  int dimension; // Tells parsers how long each row and column are
-} sudoku_t;
-
 /************ generateBoard ************/
 /*
  * Generates a blank 9x9 sudoku board filled with 0s
@@ -25,23 +20,6 @@ typedef struct sudoku {
  */
 sudoku_t *generateBoard() {
   return NULL;
-}
-
-/************ populateBoard ************/
-/*
- * Takes a sudoku board and fills it in completely using the solver functionality
- * 
- * Caller provides:
- *  A valid sudoku board
- * We guarantee:
- *  A board with one solution is returned
- * Caller is responsible for:
- *  Nothing
- */
-bool populateBoard(sudoku_t *b) {
-  if (!b) return false;
-
-  return false;
 }
 
 
@@ -58,6 +36,8 @@ bool populateBoard(sudoku_t *b) {
  */
 void printBoard(sudoku_t *b) {
   if (!b) return;
+
+  printf("%i\n", b->dimension);
 }
 
 /************ loadBoard ************/
