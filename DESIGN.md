@@ -1,7 +1,6 @@
----
-layout: page
-title: Team Rocket Sudoku Design Spec
----
+# Team Rocket Sudoku Design Spec
+## May-June 2020
+## Dartmouth CS50
 
 Sudoku is well known logic puzzle where numbers between 1 and 9 are placed on a 9x9 grid of cells. The placement of numbers has to follow certain rules. There are many variations of Sudoku, but for this project you will be looking at only the most common version of Sudoku. In this version the 9x9 grid is further divided into 9 square shaped regions of size 3x3 as shown below.
 
@@ -45,6 +44,7 @@ We anticipate the following modules or functions:
 * **populateBoard** which takes an empty board and returns a filled board
 * **generateRandomGrid** which randomly fills a specified 3x3 area within a passed board
 * **removeNumbers** which takes a complete board, removes values, and makes sure solution is still unique for each removed value
+* **deleteBoard** which takes a `sudoku_t` module and frees all associated memory
 
 * **solve** which takes a passed sudoku board and solves it, assuming the board has only one solution, else return error
 * **printBoard** which prints a given board to stdout
@@ -72,12 +72,15 @@ Pseudocode for the operation of the module is shown below in **Dataflow through 
 * **populateBoard** which takes an empty board and runs **generateRandomGrid** on the diagonal 3x3 squares within the board
 * **removeNumbers** which takes complete puzzle from **populateBoard**, removes 40+ values, and makes sure there is still only one solution using **solveBoard**
 * **printBoard** prints the created board to `stdout`
+* **deleteBoard** which takes the board and frees all associated memory
 
 #### Solve
 
 * **loadBoard** which reads the passed board (if a valid board is passed) from `stdin` and loads the board into a valid `sudoku_t` structure
 * **solveBoard** which takes a passed `sudoku_t` from **loadBoard** and solves it, assuming the board has only one solution, and returns an error if not
 * **printBoard** prints the solved board to `stdout`
+* **deleteBoard** which takes the board and frees all associated memory
+
 
 ### Major data structures
 
@@ -88,15 +91,15 @@ Helper modules that provide data structures:
 
 ```c
 typedef struct sudoku {
-  int **board; // Points to a 2D array of values holding the board
-  int dimension; // Tells parsers how long each row and column are
+  int **board;   // Points to a 2D array of values holding the board
+  int dimension; // Tells parsers how long each row and column are (will be 9 for this project)
 } sudoku_t;
 ```
 
 ### Testing plan
 
-**Unit testing** - A small test program in `testing.sh` to test each module to make sure it does what it's supposed to do.
+**Unit testing** - A small test program in `testing.sh` to test each module to make sure it does what it's supposed to do. This includes, but is not limited to, error checking, such as providing the *solver* with sudoku boards without solutions and/or with non-unique solutions.
 
-**Integration testing** - We will take known sudoku boards and run them through the *solver*, and then check the output against the valid solutions that we know to be true. Once this is done, we will also test the *create* functionality using the solver module, which we can run generated sudoku boards through to make sure they are valid.
+**Integration testing** - We will take known sudoku boards and run them through the *solver*, and then check the output against the valid solutions that we know to be true. Once this is done, we will also test the *create* functionality using the *solver* module, which we can run generated sudoku boards through to make sure they are valid. 
 
-**Fuzztesting** - We will create a program that continuously generates sudoku boards using the *create* functionality and then runs these through the solver. If any boards are labeled invalid by the solver we will check them manually to determine if the error is within the *create* or *solve* functional modules.
+**Fuzztesting** - We will create a program that continuously generates sudoku boards using the *create* functionality and then runs these through the *solver*. If any boards are labeled invalid by the *solver* we will check them manually to determine if the error is within the *create* or *solve* functional modules.
