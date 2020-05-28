@@ -3,7 +3,7 @@
 # Team Rocket, May 27, 2020
 
 LIB = common.a
-OBJS = board.o
+OBJS = board.o helpers.o
 
 CC = gcc
 CFLAGS = -Wall -pedantic -std=c11 -ggdb
@@ -17,6 +17,7 @@ $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 board.o: board.h
+helpers.o: helpers.h
 
 .PHONY: clean
 
