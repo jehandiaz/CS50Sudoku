@@ -19,7 +19,24 @@
  *  Calling deleteBoard on the returned sudoku_t
  */
 sudoku_t *generateBoard() {
-  return NULL;
+  const int boardSize = 9;
+
+  sudoku_t *newBoard = malloc(sizeof(sudoku_t));
+  if (!newBoard) return NULL;
+
+   int **newBoardArray = calloc(boardSize, sizeof(int *));
+  if (!newBoardArray) return NULL;
+
+  for (int i = 0; i < boardSize; i++) {
+    int *temp = calloc(boardSize, sizeof(int));
+    if (!temp) return NULL;
+    newBoardArray[i] = temp;
+  }
+
+  newBoard->board = newBoardArray;
+  newBoard->dimension = boardSize;
+  
+  return newBoard;
 }
 
 
@@ -34,10 +51,16 @@ sudoku_t *generateBoard() {
  * Caller is responsible for:
  *  Calling deleteBoard on the returned sudoku_t
  */
-void printBoard(sudoku_t *b) {
-  if (!b) return;
+void printBoard(sudoku_t *b, FILE *fp) {
+  if (!b || !fp) return;
 
-  printf("%i\n", b->dimension);
+  for (int i = 0; i < b->dimension; i++) {
+    for (int j = 0; j < b->dimension; j++) {
+      fprintf(fp, "%i ", b->board[i][j]);
+    }
+
+    fprintf(fp, "\n");
+  }
 }
 
 /************ loadBoard ************/
@@ -55,7 +78,29 @@ void printBoard(sudoku_t *b) {
 sudoku_t *loadBoard(FILE *fp) {
   if (!fp) return NULL;
 
-  return NULL;
+  sudoku_t *loadedBoard = generateBoard();
+  if (!loadedBoard) return NULL;
+  
+  // Iterate through each row (carrage-return friendly)
+  int rCount = 0;
+  while (rCount < loadedBoard->dimension) {
+
+    // Iterate through each column (space-friendly)
+    int cCount = 0;
+    while (cCount < loadedBoard->dimension) {
+
+      // Get each character from fp, check if char is a digit, and insert if so
+      char ch = fgetc(fp);
+      if (ch == '\n') { rCount++; break; };
+      if (!isdigit(ch)) { continue; }
+
+      // Convert char to int value (ASCII)
+      loadedBoard->board[rCount][cCount] = (int)ch - 48;
+      cCount++;
+    }
+  }
+
+  return loadedBoard;
 }
 
 /************ deleteBoard ***********/
@@ -72,5 +117,13 @@ sudoku_t *loadBoard(FILE *fp) {
 bool deleteBoard(sudoku_t *b) {
   if (!b) return false;
 
-  return false;
+  for (int i = 0; i < b->dimension; i++) {
+    free(b->board[i]);
+  }
+  
+  free(b->board);
+  free(b);
+  b = NULL;
+  
+  return true;
 }
