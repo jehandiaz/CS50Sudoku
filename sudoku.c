@@ -12,6 +12,7 @@
 #include <string.h>
 
 
+
 // exit code 1 = invalid number of arguments
 // exit code 2 = invalid command given
 int main(int argc, char* argv[]) {
