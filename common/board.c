@@ -24,11 +24,11 @@ sudoku_t *generateBoard() {
   sudoku_t *newBoard = malloc(sizeof(sudoku_t));
   if (!newBoard) return NULL;
 
-   int **newBoardArray = calloc(boardSize, sizeof(int *));
+  int** newBoardArray = calloc(boardSize, sizeof(int *));
   if (!newBoardArray) return NULL;
 
   for (int i = 0; i < boardSize; i++) {
-    int *temp = calloc(boardSize, sizeof(int));
+    int* temp = calloc(boardSize, sizeof(int));
     if (!temp) return NULL;
     newBoardArray[i] = temp;
   }
@@ -102,18 +102,3 @@ void deleteBoard(sudoku_t *b) {
     free(b);
   }
 }
-
-  // {}
-    
-  // for ()int ** boar** board = sudcfree()\// // // // // // // // // // // // // // // // // sud\\\b_>->board);
-   
-  /*
-  if (!fp) {
-    printf("could not open file");
-  }
-
-  */
-  
-////            free()b[]i;void !->board
-       free()board;b-> {}
-       \    }
