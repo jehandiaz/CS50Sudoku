@@ -19,7 +19,24 @@
  *  Calling deleteBoard on the returned sudoku_t
  */
 sudoku_t *generateBoard() {
-  return NULL;
+  const int boardSize = 9;
+
+  sudoku_t *newBoard = malloc(sizeof(sudoku_t));
+  if (!newBoard) return NULL;
+
+   int **newBoardArray = calloc(boardSize, sizeof(int *));
+  if (!newBoardArray) return NULL;
+
+  for (int i = 0; i < boardSize; i++) {
+    int *temp = calloc(boardSize, sizeof(int));
+    if (!temp) return NULL;
+    newBoardArray[i] = temp;
+  }
+
+  newBoard->board = newBoardArray;
+  newBoard->dimension = boardSize;
+  
+  return newBoard;
 }
 
 
@@ -37,7 +54,13 @@ sudoku_t *generateBoard() {
 void printBoard(sudoku_t *b) {
   if (!b) return;
 
-  printf("%i\n", b->dimension);
+  for (int i = 0; i < b->dimension; i++) {
+    for (int j = 0; j < b->dimension; j++) {
+      printf("%i ", b->board[i][j]);
+    }
+
+    printf("\b\n");
+  }
 }
 
 /************ loadBoard ************/
@@ -69,8 +92,28 @@ sudoku_t *loadBoard(FILE *fp) {
  * Caller is responsible for:
  *  Nothing
  */
-bool deleteBoard(sudoku_t *b) {
-  if (!b) return false;
-
-  return false;
+void deleteBoard(sudoku_t *b) {
+  if (!b) {
+    for (int i=0; i < b->dimension; i++) {
+      free(b->board[i]);
+    }
+    
+    free(b->board);
+    free(b);
+  }
 }
+
+  // {}
+    
+  // for ()int ** boar** board = sudcfree()\// // // // // // // // // // // // // // // // // sud\\\b_>->board);
+   
+  /*
+  if (!fp) {
+    printf("could not open file");
+  }
+
+  */
+  
+////            free()b[]i;void !->board
+       free()board;b-> {}
+       \    }

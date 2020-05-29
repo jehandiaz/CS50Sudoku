@@ -5,10 +5,13 @@
 * sudoku.c
 */
 
-//#include <cs1lib.h>
+// #include <cs1lib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "board.h"
+#include "helpers.h"
 
 // exit code 1 = invalid number of arguments
 // exit code 2 = invalid command given
@@ -29,8 +32,14 @@ int main(int argc, char* argv[]) {
         return 2;
     }
 
+    sudoku_t *b = generateBoard();
+    printBoard(b);
+    deleteBoard(b);
+
     return 0;
 }
+
+
 
 
 // create

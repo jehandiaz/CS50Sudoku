@@ -27,5 +27,4 @@ $(PROG): $(OBJS)
 clean:
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROG)
-	rm -f core
-	rm -f vscore.*
+	rm -d core
