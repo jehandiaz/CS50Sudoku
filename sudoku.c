@@ -1,41 +1,46 @@
 /*
 * Joe Gyorda, Adam McQuilkin, Daniel Akili, Jehan Diaz
 * May 2020
-* CS 50 Team Project (Sudoku) - Team Rocket
+* CS 50 Team Project (Sudoku) - Team Rocket (woop!)
 * sudoku.c
 */
 
-
-//#include <cs1lib.h>
+// #include <cs1lib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "board.h"
+#include "helpers.h"
 
 
 // exit code 1 = invalid number of arguments
 // exit code 2 = invalid command given
 int main(int argc, char* argv[]) {
-    if (argc != 2) {                // must be exactly 2 arguments (1 command line)
-        printf("Error: Invalid number of arguments\n");
+    if (argc < 2) { // Requires at least two valid arguments
+        fprintf(stderr, "ERROR: Invalid number of arguments\n");
         return 1;
     }
 
     char* command = argv[1];
 
-    if (strcmp(command, "create") === 0) {
-        // sudokuCreate()
-    }
-    else if {
-        // sudokuSolve()
-    }
-    else {
-        printf("Command must be either 'create' or 'solve'\n");
+    if (strcmp(command, "create") == 0) {
+        printf("Create!\n");
+    } else if (strcmp(command, "solve") == 0) {
+        printf("Solve!\n");
+    } else {
+        fprintf(stderr, "ERROR: Command must be either 'create' or 'solve'\n");
         return 2;
     }
 
+    sudoku_t *b = generateBoard();
+    printBoard(b);
+    deleteBoard(b);
+
     return 0;
 }
+
+
 
 
 // create
