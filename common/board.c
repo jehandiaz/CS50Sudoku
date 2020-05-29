@@ -92,28 +92,15 @@ sudoku_t *loadBoard(FILE *fp) {
  * Caller is responsible for:
  *  Nothing
  */
-void deleteBoard(sudoku_t *b) {
-  if (!b) {
-    for (int i=0; i < b->dimension; i++) {
-      free(b->board[i]);
-    }
-    
-    free(b->board);
-    free(b);
-  }
-}
+bool deleteBoard(sudoku_t *b) {
+  if (!b) return false;
 
-  // {}
-    
-  // for ()int ** boar** board = sudcfree()\// // // // // // // // // // // // // // // // // sud\\\b_>->board);
-   
-  /*
-  if (!fp) {
-    printf("could not open file");
+  for (int i = 0; i < b->dimension; i++) {
+    free(b->board[i]);
   }
-
-  */
   
-////            free()b[]i;void !->board
-       free()board;b-> {}
-       \    }
+  free(b->board);
+  free(b);
+  
+  return true;
+}

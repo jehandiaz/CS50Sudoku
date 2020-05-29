@@ -33,21 +33,10 @@ int main(int argc, char* argv[]) {
     }
 
     sudoku_t *b = generateBoard();
+    if (!b) return 3;
+
     printBoard(b);
     deleteBoard(b);
 
     return 0;
 }
-
-
-
-
-// create
-// display output in a file?
-
-
-// solver
-// keep track of number of times each number appears in each row, 
-// column, and 3x3 square with counters
-
-

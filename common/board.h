@@ -72,6 +72,6 @@ sudoku_t *loadBoard(FILE *fp);
  * Caller is responsible for:
  *  Nothing
  */
-void deleteBoard(sudoku_t *b);
+bool deleteBoard(sudoku_t *b);
 
 #endif // __BOARD_H
