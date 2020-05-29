@@ -8,6 +8,7 @@
 #include "helpers.h"
 #include "board.h"
 
+
 /************ generateRandomGrid ************/
 /*
  * Populates a specified 3x3 grid within the board with numbers 1-9
@@ -21,6 +22,8 @@
  */
 bool generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
   if (!b || rStart < 0 || cStart < 0 || b->dimension <= rStart + 3 || b->dimension <= cStart + 3) return false;
+
+
 
   return false;
 }
@@ -37,9 +40,14 @@ bool generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
  *  Nothing
  */
 bool populateBoard(sudoku_t *b) {
+  for (int i = 0; i < b->dimension; i++) {
+    for (int j = 0; j < b->dimension; j++) {
+      b->board[i][j] = (rand() % 10);
+    }
+  } 
   if (!b) return false;
 
-  return false;
+  return true;
 }
 
 /************ removeNumbers ************/

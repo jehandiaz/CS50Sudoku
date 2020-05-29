@@ -7,6 +7,9 @@
 
 #include "board.h"
 
+#include <stdlib.h>
+#include <stdbool.h>
+
 /************ generateBoard ************/
 /*
  * Generates a blank 9x9 sudoku board filled with 0s
@@ -38,6 +41,7 @@ sudoku_t *generateBoard() {
   
   return newBoard;
 }
+
 
 
 /************ printBoard ************/
@@ -98,22 +102,7 @@ void deleteBoard(sudoku_t *b) {
       free(b->board[i]);
     }
     
-    free(b->board);
+    free(b->board); 
     free(b);
   }
 }
-
-  // {}
-    
-  // for ()int ** boar** board = sudcfree()\// // // // // // // // // // // // // // // // // sud\\\b_>->board);
-   
-  /*
-  if (!fp) {
-    printf("could not open file");
-  }
-
-  */
-  
-////            free()b[]i;void !->board
-       free()board;b-> {}
-       \    }

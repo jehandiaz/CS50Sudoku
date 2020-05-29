@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
     }
 
     sudoku_t *b = generateBoard();
+    //populateBoard(b);
     printBoard(b);
     deleteBoard(b);
 
