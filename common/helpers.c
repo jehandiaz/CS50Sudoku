@@ -93,7 +93,7 @@ bool solveBoard(sudoku_t *b) {
 
     // if the number if cellsToFill is 0; then the puzzle is solved, return true.
     if (cellsToFill == 0){
-      return 0;
+      return true;
     }
 
     int newValue;         // value to fill empty cells (should be between 1 and 9)
