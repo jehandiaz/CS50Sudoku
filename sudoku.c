@@ -33,23 +33,33 @@ int main(int argc, char* argv[]) {
         return 2;
     }
 
+    // Test save to file
     sudoku_t *b = generateBoard();
-    //populateBoard(b);
-    printBoard(b);
+    if (!b) return 3;
+
+    FILE *fp = fopen("test.out", "w");
+    if (!fp) return 4;
+
+    for (int r = 0; r < b->dimension; r++) {
+        for (int c = 0; c < b->dimension; c++) {
+            b->board[r][c] = (r + c) % 10;
+        }
+    }
+
+    printBoard(b, fp);
+    deleteBoard(b);
+    fclose(fp);
+
+    // Test read from file
+    FILE *fr = fopen("test.out", "r");
+    if (!fr) return 5;
+    
+    sudoku_t *b = loadBoard(fr);
+    if (!b) return 6;
+    fclose(fr);
+
+    printBoard(b, stdout);
     deleteBoard(b);
 
     return 0;
 }
-
-
-
-
-// create
-// display output in a file?
-
-
-// solver
-// keep track of number of times each number appears in each row, 
-// column, and 3x3 square with counters
-
-

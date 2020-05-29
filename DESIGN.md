@@ -1,6 +1,6 @@
 # Team Rocket Sudoku Design Spec
-## May-June 2020
-## Dartmouth CS50
+
+## Dartmouth CS50, May-June 2020
 
 Sudoku is well known logic puzzle where numbers between 1 and 9 are placed on a 9x9 grid of cells. The placement of numbers has to follow certain rules. There are many variations of Sudoku, but for this project you will be looking at only the most common version of Sudoku. In this version the 9x9 grid is further divided into 9 square shaped regions of size 3x3 as shown below.
 
@@ -80,7 +80,6 @@ Pseudocode for the operation of the module is shown below in **Dataflow through 
 * **solveBoard** which takes a passed `sudoku_t` from **loadBoard** and solves it, assuming the board has only one solution, and returns an error if not
 * **printBoard** prints the solved board to `stdout`
 * **deleteBoard** which takes the board and frees all associated memory
-
 
 ### Major data structures
 
