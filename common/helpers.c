@@ -10,6 +10,8 @@
 #include<stdlib.h>
 #include<stdio.h>
 
+static int getRandNumber(int min, int max);
+
 /************ generateRandomGrid ************/
 /*
  * Populates a specified 3x3 grid within the board with numbers 1-9
@@ -58,19 +60,26 @@ bool populateBoard(sudoku_t *b) {
  *  Nothing
  */
 bool removeNumbers(sudoku_t *b, int n) {
-  if (!b || (b->dimension) * (b->dimension) - MIN_SPACES < n) return false;
+  if (!b || (((b->dimension) * (b->dimension)) - MIN_SPACES) < n) return false;
+  // printf("N: [%i] < [%i]\n", ((b->dimension) * (b->dimension)) - MIN_SPACES, n);
+  srand(time(0));
 
   int numRemoved = 0;
   while (numRemoved < n) {
-    int dim1 = getRandNumber(0, b->dimension);  // generate random number between 0 and 9
-    int dim2 = getRandNumber(0, b->dimension);  // do it again
+    int dim1 = getRandNumber(0, b->dimension - 1);  // generate random number between 0 and 9
+    int dim2 = getRandNumber(0, b->dimension - 1);  // do it again
     int num = b->board[dim1][dim2];             // store number currently in random slot
     b->board[dim1][dim2] = 0;                   // remove number at randomly chosen slot by setting it to 0
     
-    if (isUniqueBoard(b))                       // check if board created is unique
+    if (num && true) // solveBoard(b)                          // check if board created is unique
       numRemoved+=1;
-    else                                        // reset the item changed to original and run thu loop again
-      b->board[dim1][dim2] = curDim;           
+
+    // reset the item changed to original and run thu loop again
+    else {                                        
+      b->board[dim1][dim2] = num;
+    }
+
+    // printf("Current state: board[%i][%i] = %i, numRemoved: [%i]\n", dim1, dim2, b->board[dim1][dim2], numRemoved);
   }
 
   return true;
@@ -89,8 +98,10 @@ bool removeNumbers(sudoku_t *b, int n) {
 * Caller is responsible for:
 *   Nothing
 */
-int getRandNumber(int min, int max) {
-  return (rand() % (upper – lower + 1)) + lower)
+static int getRandNumber(int min, int max) {
+  int returnValue = rand() % (max - min + 1) + min;
+  // printf("Rand generate [%i]\n", returnValue);
+  return (returnValue);
 }
 
 /************ solveBoard ************/

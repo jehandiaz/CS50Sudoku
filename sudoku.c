@@ -47,6 +47,10 @@ int main(int argc, char* argv[]) {
     }
 
     printBoard(b, fp);
+    removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
+    printBoard(b, stdout);
+    printf("---------\n");
+
     deleteBoard(b);
     fclose(fp);
 
@@ -54,7 +58,7 @@ int main(int argc, char* argv[]) {
     FILE *fr = fopen("test.out", "r");
     if (!fr) return 5;
     
-    sudoku_t *b = loadBoard(fr);
+    b = loadBoard(fr);
     if (!b) return 6;
     fclose(fr);
 
