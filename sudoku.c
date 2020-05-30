@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
     FILE *fr = fopen("test.out", "r");
     if (!fr) return 5;
     
-    sudoku_t *b = loadBoard(fr);
+    b = loadBoard(fr);
     if (!b) return 6;
     fclose(fr);
 

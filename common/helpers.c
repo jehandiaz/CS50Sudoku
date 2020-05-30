@@ -97,8 +97,8 @@ bool solveBoard(sudoku_t *b) {
     }
 
     int newValue;         // value to fill empty cells (should be between 1 and 9)
-    int row;            // keeps track of rows
-    int col;            // keeps track of columns
+    int row = 0;            // keeps track of rows
+    int col = 0;            // keeps track of columns
 
     // check for every possible new value entry
     for (newValue = 1; newValue<= dimension; newValue++){
