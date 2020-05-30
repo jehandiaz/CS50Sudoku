@@ -21,6 +21,17 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *ce
 /*********** prototypes **************/
 static int getRandNumber(int min, int max);
 
+bool testSolver(sudoku_t *b);
+bool testSolverHelper(sudoku_t *b, int pos);
+bool isNumberPresent(sudoku_t *b, int r, int c, int v);
+
+bool checkRow(sudoku_t *b, int r, int c, int v);
+bool checkCol(sudoku_t *b, int r, int c, int v);
+bool checkGrid(sudoku_t *b, int r, int c, int v);
+
+int findArrayRow(sudoku_t *b, int pos);
+int findArrayCol(sudoku_t *b, int pos);
+
 /************ generateRandomGrid ************/
 /*
  * Populates a specified 3x3 grid within the board with numbers 1-9
@@ -188,25 +199,30 @@ static int getRandNumber(int min, int max) {
  * Caller is responsible for:
  *  Nothing
  */
-bool solveBoard(sudoku_t *b) { 
 
-    int **board = b->board;         // get the board
-    int dimension = b->dimension;   // get the dimension
+
+/**
+ * Check how many zeros exist
+ *  If none, return true
+ * 
+ * Loop through every number to insert
+ *  Loop through every row
+ *    Check 
+ */
+
+bool solveBoard(sudoku_t *b) {
 
     // count the number of cells to fill
     int cellsToFill = 0;
 
-    for (int i=0; i<dimension; i++){
-      for (int j=0; j<dimension; j++){
-
-        // if there is a cell value with value 0, increment cellsToFill
-        if (board[i][j] == 0){
+    // if there is a cell value with value 0, increment cellsToFill
+    for (int i = 0; i < b->dimension; i++){
+      for (int j = 0; j < b->dimension; j++){
+        if (b->board[i][j] == 0){
           cellsToFill++;
         }
-
       }
     }
-
 
     // if the number if cellsToFill is 0; then the puzzle is solved, return true.
     if (cellsToFill == 0){
@@ -218,35 +234,36 @@ bool solveBoard(sudoku_t *b) {
     int col = 0;            // keeps track of columns
 
     // check for every possible new value entry
-    for (newValue = 1; newValue<= dimension; newValue++){
+    for (newValue = 1; newValue <= b->dimension; newValue++){
 
       // iterate over the current row and check if the value already exists
-      for (int i=0; i<dimension; i++){
-        if (board[row][i] == newValue){
-            continue;       // do nothing if the value already exists
+      for (int i = 0; i < b->dimension; i++){
+        if (b->board[row][i] == newValue){
+            break;       // do nothing if the value already exists
         }
       }
 
       // iterate over the current column and check if the value already exists
-      for (int j=0; j<dimension; j++){
-        if (board[j][col] == newValue){
-          continue;       // do nothing
+      for (int j = 0; j < b->dimension; j++){
+        if (b->board[j][col] == newValue){
+          break;       // do nothing
         }
       }
 
       // iterate over the 3x3 squared region and check if the value already exists
-      int squareRow = (row/3)*3;
-      int squareCol = (col/3)*3;
-      for (int i = squareRow; i<squareRow+3; i++){
-        for (int j = squareCol; j<squareCol+3; j++){
-          if (board[i][j] == newValue){
+      int squareRow = (row / 3) * 3;
+      int squareCol = (col / 3) * 3;
+
+      for (int i = squareRow; i < squareRow + 3; i++){
+        for (int j = squareCol; j < squareCol + 3; j++){
+          if (b->board[i][j] == newValue){
               continue;    // do nothing is the value already exists
           }
         }
       }
 
       // else fill the cell with the new value
-      board[row][col] = newValue;
+      b->board[row][col] = newValue;
       
       // if the solving was done correctly, return true
       if (solveBoard(b)){
@@ -254,7 +271,7 @@ bool solveBoard(sudoku_t *b) {
       }
 
       // else, change that value to 0
-      board[row][col] = 0;
+      b->board[row][col] = 0;
 
     }
 
@@ -265,4 +282,109 @@ bool solveBoard(sudoku_t *b) {
   if (!b) return false;
 
   return false; */
+}
+
+bool testSolver(sudoku_t *b) {
+  return testSolverHelper(b, 0);
+}
+
+bool testSolverHelper(sudoku_t *b, int pos) {
+
+  // Check number of zeros
+  int numZeros = 0;
+  for (int i = 0; i < b->dimension; i++) {
+    for (int j = 0; j < b->dimension; j++) {
+      if (!b->board[i][j]) {
+        numZeros++;
+      }
+    }
+  }
+
+  // Base case of recursion
+  if (!numZeros) return true;
+
+  // Find row and column from position
+  int r = findArrayRow(b, pos);
+  int c = findArrayCol(b, pos);
+
+  // Step over filled numbers
+  if (b->board[r][c]) return testSolverHelper(b, pos + 1);
+
+  // Number to place
+  int currentVal = 1;
+  b->board[r][c] = currentVal;
+  // printf("(%i, %i) -> [%i]\n", r, c, currentVal);
+
+  while (isNumberPresent(b, r, c, currentVal) || !testSolverHelper(b, pos + 1)) {
+    b->board[r][c] = ++currentVal;
+    // printf("(%i, %i) -> [%i]\n", r, c, currentVal);
+
+    if (currentVal > b->dimension) {
+      b->board[r][c] = 0;
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool isNumberPresent(sudoku_t *b, int r, int c, int v) {
+  if (checkRow(b, r, c, v)) { 
+    // printf("Row invalid\n");
+    return true;
+  }
+
+  if (checkCol(b, r, c, v)) {
+    // printf("Col invalid\n");
+    return true;
+  }
+
+  if (checkGrid(b, r, c, v)) {
+    // printf("Grid invalid\n");
+    return true;
+  }
+
+  return false;
+}
+
+bool checkRow(sudoku_t *b, int r, int c, int v) {
+  for (int j = 0; j < b->dimension; j++) {
+    // printf("ROW [%i] -> [%i] ?= [%i]\n", r, b->board[r][j], v);
+    if (j == c) continue;
+    if (b->board[r][j] == v) return true;
+  }
+
+  return false;
+}
+
+bool checkCol(sudoku_t *b, int r, int c, int v) {
+  for (int i = 0; i < b->dimension; i++) {
+    if (i == r) continue;
+    if (b->board[i][c] == v) return true;
+  }
+
+  return false;
+}
+
+bool checkGrid(sudoku_t *b, int r, int c, int v) {
+  int rStart = (int)(r / 3) * 3;
+  int cStart = (int)(c / 3) * 3;
+
+  for (int i = rStart; i < rStart + 3; i++) {
+    for (int j = cStart; j < cStart + 3; j++) {
+      if (i == r && j == c) continue;
+      // printf("GRID (%i, %i) -> [%i] ?= [%i]\n", i, j, b->board[i][j], v);
+      if (b->board[i][j] == v) return true;
+    }
+  }
+
+  return false;
+}
+
+int findArrayRow(sudoku_t *b, int pos) {
+  return (int)(pos / b->dimension);
+}
+
+int findArrayCol(sudoku_t *b, int pos) {
+  return (int)(pos % b->dimension);
 }

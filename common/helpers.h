@@ -72,5 +72,6 @@ bool removeNumbers(sudoku_t *b, int n);
  *  Nothing
  */
 bool solveBoard(sudoku_t *b);
+bool testSolver(sudoku_t *b);
 
 #endif // __HELPERS_H
