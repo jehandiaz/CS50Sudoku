@@ -27,4 +27,4 @@ $(PROG): $(OBJS)
 clean:
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROG)
-	rm -d core
+	rm -f core
