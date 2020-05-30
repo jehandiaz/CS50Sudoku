@@ -18,7 +18,12 @@ static counters_t *getRow(sudoku_t *b, int r);
 static counters_t *getColumn(sudoku_t *b, int col);
 static int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
 
+<<<<<<< HEAD
+/*********** prototypes **************/
+int getRandNumber(int min, int max);
+=======
 static int getRandNumber(int min, int max);
+>>>>>>> 95211510dbbf4cc42b02fe2f601b893fe4e370a5
 
 /************ generateRandomGrid ************/
 /*
@@ -145,6 +150,10 @@ bool removeNumbers(sudoku_t *b, int n) {
     
     if (num && true) // solveBoard(b)                          // check if board created is unique
       numRemoved+=1;
+<<<<<<< HEAD
+    else                                        // reset the item changed to original and run thu loop again
+      b->board[dim1][dim2] = num;           
+=======
 
     // reset the item changed to original and run thu loop again
     else {                                        
@@ -152,6 +161,7 @@ bool removeNumbers(sudoku_t *b, int n) {
     }
 
     // printf("Current state: board[%i][%i] = %i, numRemoved: [%i]\n", dim1, dim2, b->board[dim1][dim2], numRemoved);
+>>>>>>> 95211510dbbf4cc42b02fe2f601b893fe4e370a5
   }
 
   return true;
