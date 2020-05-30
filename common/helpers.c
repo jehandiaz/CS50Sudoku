@@ -7,7 +7,11 @@
 
 #include "helpers.h"
 #include "board.h"
+#include "counters.h"
 
+counters_t *getRow(sudoku_t *b, int r);
+counters_t *getColumn(sudoku_t *b, int col);
+int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
 
 /************ generateRandomGrid ************/
 /*
@@ -20,13 +24,76 @@
  * Caller is responsible for:
  *  Nothing
  */
-bool generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
-  if (!b || rStart < 0 || cStart < 0 || b->dimension <= rStart + 3 || b->dimension <= cStart + 3) return false;
+void generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
+  if (!b || rStart < 0 || cStart < 0 || b->dimension <= rStart + 3 || b->dimension <= cStart + 3) return;
+  counters_t *grid = counters_new();
 
+  // Iterate through each row of the 3x3
+  for (int i = rStart; i < rStart + 3; i++) {
+    counters_t *row = getRow(b, rStart);
 
+    // Iterate through each column of the 3x3
+    for (int j = cStart; j < cStart + 3; j++) {
+      counters_t *column = getColumn(b, cStart);
+      int insert = generateRandomNum(row, column, grid);
+      counters_add(grid, insert);
+      b->board[i][j] = insert;
+      counters_delete(column);
+      } 
+      
+    counters_delete(row);
+  }
 
-  return false;
+  counters_delete(grid);
+  return;
 }
+
+counters_t *getRow(sudoku_t *b, int r) {
+  counters_t *row = counters_new();
+  for (int i = 0; i < b->dimension; i++) {
+    if (!(b->board[r][i] == 0)) {
+      counters_add(row, b->board[r][i]);
+    }
+  }
+  return row;
+}
+
+counters_t *getColumn(sudoku_t *b, int col) {
+  counters_t *column = counters_new();
+  for (int i = 0; i < b->dimension; i++) {
+    if (!(b->board[i][col] == 0)) {
+      counters_add(column, b->board[i][col]);
+    }
+  }
+  return column;
+}
+
+/********** generateRandomNum **********/
+/* 
+ * Generates a random number from 1-9 and checks whether that number has already been used 
+ * in a given row, column, or grid
+ * 
+ * Caller provides: 
+ *  a set of numbers in a row, column, and grid seen by one cell
+ * We guarantee: 
+ *  returns a number unique to a row, column, and grid seen by a cell
+ * Caller is responsible for: 
+ *  Nothing
+ */
+int generateRandomNum(counters_t *row, counters_t *column, counters_t *grid) {
+  int insert;
+  while(1) {
+    // Generates a random number between 1 and 9
+    insert = (rand()%9) + 1;
+
+    // Check if that number is in the current row, column, and cell
+    if (counters_get(row, insert) == 0 && counters_get(column, insert) == 0 && counters_get(grid, insert) == 0) {
+      return insert;
+    }
+  }
+  return insert;
+}
+  
 
 /************ populateBoard ************/
 /*
@@ -40,14 +107,9 @@ bool generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
  *  Nothing
  */
 bool populateBoard(sudoku_t *b) {
-  for (int i = 0; i < b->dimension; i++) {
-    for (int j = 0; j < b->dimension; j++) {
-      b->board[i][j] = (rand() % 10);
-    }
-  } 
   if (!b) return false;
 
-  return true;
+  return false;
 }
 
 /************ removeNumbers ************/
@@ -62,7 +124,7 @@ bool populateBoard(sudoku_t *b) {
  *  Nothing
  */
 bool removeNumbers(sudoku_t *b, int n) {
-  if (!b || (b->dimension) * (b->dimension) - MIN_SPACES < n) return false;
+  if (!b || (b->dimension) * (b->dimension) - 17 < n) return false;
 
   return false;
 }

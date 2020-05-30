@@ -18,7 +18,7 @@
 #define __HELPERS_H
 
 // The minimum number of numbers needed to solve a board
-const int MIN_SPACES = 17;
+//const int MIN_SPACES = 17;
 
 /************ generateRandomGrid ************/
 /*
@@ -31,7 +31,7 @@ const int MIN_SPACES = 17;
  * Caller is responsible for:
  *  Nothing
  */
-bool generateRandomGrid(sudoku_t *b, int rStart, int cStart);
+void generateRandomGrid(sudoku_t *b, int rStart, int cStart);
 
 /************ populateBoard ************/
 /*

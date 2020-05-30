@@ -12,6 +12,7 @@
 
 #include "board.h"
 #include "helpers.h"
+#include "counters.h"
 
 
 // exit code 1 = invalid number of arguments
@@ -37,16 +38,19 @@ int main(int argc, char* argv[]) {
     sudoku_t *b = generateBoard();
     if (!b) return 3;
 
+    generateRandomGrid(b, 0, 0);
+    printBoard(b, stdout);
+
     FILE *fp = fopen("test.out", "w");
     if (!fp) return 4;
 
     for (int r = 0; r < b->dimension; r++) {
         for (int c = 0; c < b->dimension; c++) {
-            b->board[r][c] = (r + c) % 10;
+            b->board[r][c] = (rand()%9) + 1;
         }
     }
-
     printBoard(b, fp);
+
     deleteBoard(b);
     fclose(fp);
 
@@ -54,12 +58,12 @@ int main(int argc, char* argv[]) {
     FILE *fr = fopen("test.out", "r");
     if (!fr) return 5;
     
-    sudoku_t *b = loadBoard(fr);
-    if (!b) return 6;
+    sudoku_t *c = loadBoard(fr);
+    if (c) return 6;
     fclose(fr);
 
-    printBoard(b, stdout);
-    deleteBoard(b);
+    printBoard(c, stdout);
+    deleteBoard(c);
 
     return 0;
 }
