@@ -7,6 +7,7 @@
  * A board is a 9x9 2D array that holds its size
  */
 
+#include <ctype.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,10 +16,7 @@
 #ifndef __BOARD_H
 #define __BOARD_H
 
-typedef struct sudoku {
-  int **board; // Points to a 2D array of values holding the board
-  int dimension; // Tells parsers how long each row and column are
-} sudoku_t;
+typedef struct sudoku sudoku_t;
 
 /************ generateBoard ************/
 /*
@@ -45,7 +43,7 @@ sudoku_t *generateBoard();
  * Caller is responsible for:
  *  Calling deleteBoard on the returned sudoku_t
  */
-void printBoard(sudoku_t *b);
+void printBoard(sudoku_t *b, FILE *fp);
 
 /************ loadBoard ************/
 
@@ -72,6 +70,6 @@ sudoku_t *loadBoard(FILE *fp);
  * Caller is responsible for:
  *  Nothing
  */
-void deleteBoard(sudoku_t *b);
+bool deleteBoard(sudoku_t *b);
 
 #endif // __BOARD_H
