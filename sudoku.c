@@ -45,25 +45,26 @@ int main(int argc, char* argv[]) {
     generateRandomGrid(b, 3, 3);
     generateRandomGrid(b, 6, 6);
 
-    printBoard(b, stdout);
-    printf("---------\n");
+    // printBoard(b, stdout);
+    // printf("---------\n");
 
-    // FILE *fp = fopen("test.out", "w");
-    // if (!fp) return 4;
+    FILE *fp = fopen("test.out", "w");
+    if (!fp) return 4;
 
     // for (int r = 0; r < b->dimension; r++) {
     //     for (int c = 0; c < b->dimension; c++) {
     //         b->board[r][c] = (rand()%9) + 1;
     //     }
     // }
-    // printBoard(b, fp);
+    printBoard(b, fp);
 
     // removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
-    // printBoard(b, stdout);
-    // printf("---------\n");
+    printf("Generated board\n");
+    printBoard(b, stdout);
+    printf("---------\n");
 
-    // deleteBoard(b);
-    // fclose(fp);
+    deleteBoard(b);
+    fclose(fp);
 
     // Test read from file
     FILE *fr = fopen("test.out", "r");
@@ -78,9 +79,19 @@ int main(int argc, char* argv[]) {
     if (testSolver(b)) printf("Solved!!\n");
     else printf("Stop that\n");
 
-    // printBoard(b, stdout);
-    // printf("---------\n");
+    printf("Solved board\n");
+    printBoard(b, stdout);
+    printf("---------\n");
 
+    removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
+    printf("Numbers removed\n");
+    printBoard(b, stdout);
+    printf("---------\n");
+
+    if (testSolver(b)) printf("Solved!!\n");
+    else printf("Stop that\n");
+
+    printf("Re-solved board\n");
     printBoard(b, stdout);
     deleteBoard(b);
 
