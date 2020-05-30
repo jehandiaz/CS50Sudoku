@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "board.h"
 #include "helpers.h"
@@ -38,7 +39,10 @@ int main(int argc, char* argv[]) {
     sudoku_t *b = generateBoard();
     if (!b) return 3;
 
+    srand(time(0));
     generateRandomGrid(b, 0, 0);
+    generateRandomGrid(b, 3, 3);
+    generateRandomGrid(b, 6, 6);
     printBoard(b, stdout);
 
     FILE *fp = fopen("test.out", "w");

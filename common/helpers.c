@@ -5,6 +5,11 @@
  * A board is a 9x9 2D array that holds its size
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
 #include "helpers.h"
 #include "board.h"
 #include "counters.h"
@@ -25,7 +30,8 @@ int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
  *  Nothing
  */
 void generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
-  if (!b || rStart < 0 || cStart < 0 || b->dimension <= rStart + 3 || b->dimension <= cStart + 3) return;
+  if (!b || rStart < 0 || cStart < 0 || b->dimension < rStart + 3 || b->dimension < cStart + 3) return;
+  //srand(time(0));
   counters_t *grid = counters_new();
 
   // Iterate through each row of the 3x3
@@ -124,7 +130,7 @@ bool populateBoard(sudoku_t *b) {
  *  Nothing
  */
 bool removeNumbers(sudoku_t *b, int n) {
-  if (!b || (b->dimension) * (b->dimension) - 17 < n) return false;
+  if (!b || (b->dimension) * (b->dimension) - MIN_SPACES < n) return false;
 
   return false;
 }

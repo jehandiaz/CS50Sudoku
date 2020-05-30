@@ -18,7 +18,7 @@
 #define __HELPERS_H
 
 // The minimum number of numbers needed to solve a board
-//const int MIN_SPACES = 17;
+static int MIN_SPACES = 17;
 
 /************ generateRandomGrid ************/
 /*
