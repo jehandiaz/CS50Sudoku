@@ -18,12 +18,8 @@ static counters_t *getRow(sudoku_t *b, int r);
 static counters_t *getColumn(sudoku_t *b, int col);
 static int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
 
-<<<<<<< HEAD
 /*********** prototypes **************/
-int getRandNumber(int min, int max);
-=======
 static int getRandNumber(int min, int max);
->>>>>>> 95211510dbbf4cc42b02fe2f601b893fe4e370a5
 
 /************ generateRandomGrid ************/
 /*
@@ -150,10 +146,6 @@ bool removeNumbers(sudoku_t *b, int n) {
     
     if (num && true) // solveBoard(b)                          // check if board created is unique
       numRemoved+=1;
-<<<<<<< HEAD
-    else                                        // reset the item changed to original and run thu loop again
-      b->board[dim1][dim2] = num;           
-=======
 
     // reset the item changed to original and run thu loop again
     else {                                        
@@ -161,7 +153,6 @@ bool removeNumbers(sudoku_t *b, int n) {
     }
 
     // printf("Current state: board[%i][%i] = %i, numRemoved: [%i]\n", dim1, dim2, b->board[dim1][dim2], numRemoved);
->>>>>>> 95211510dbbf4cc42b02fe2f601b893fe4e370a5
   }
 
   return true;
@@ -197,8 +188,81 @@ static int getRandNumber(int min, int max) {
  * Caller is responsible for:
  *  Nothing
  */
-bool solveBoard(sudoku_t *b) {
+bool solveBoard(sudoku_t *b) { 
+
+    int **board = b->board;         // get the board
+    int dimension = b->dimension;   // get the dimension
+
+    // count the number of cells to fill
+    int cellsToFill = 0;
+
+    for (int i=0; i<dimension; i++){
+      for (int j=0; j<dimension; j++){
+
+        // if there is a cell value with value 0, increment cellsToFill
+        if (board[i][j] == 0){
+          cellsToFill++;
+        }
+
+      }
+    }
+
+
+    // if the number if cellsToFill is 0; then the puzzle is solved, return true.
+    if (cellsToFill == 0){
+      return true;
+    }
+
+    int newValue;         // value to fill empty cells (should be between 1 and 9)
+    int row = 0;            // keeps track of rows
+    int col = 0;            // keeps track of columns
+
+    // check for every possible new value entry
+    for (newValue = 1; newValue<= dimension; newValue++){
+
+      // iterate over the current row and check if the value already exists
+      for (int i=0; i<dimension; i++){
+        if (board[row][i] == newValue){
+            continue;       // do nothing if the value already exists
+        }
+      }
+
+      // iterate over the current column and check if the value already exists
+      for (int j=0; j<dimension; j++){
+        if (board[j][col] == newValue){
+          continue;       // do nothing
+        }
+      }
+
+      // iterate over the 3x3 squared region and check if the value already exists
+      int squareRow = (row/3)*3;
+      int squareCol = (col/3)*3;
+      for (int i = squareRow; i<squareRow+3; i++){
+        for (int j = squareCol; j<squareCol+3; j++){
+          if (board[i][j] == newValue){
+              continue;    // do nothing is the value already exists
+          }
+        }
+      }
+
+      // else fill the cell with the new value
+      board[row][col] = newValue;
+      
+      // if the solving was done correctly, return true
+      if (solveBoard(b)){
+        return true;
+      }
+
+      // else, change that value to 0
+      board[row][col] = 0;
+
+    }
+
+    return false;
+
+
+  /*
   if (!b) return false;
 
-  return false;
+  return false; */
 }
