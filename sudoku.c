@@ -16,6 +16,7 @@
 #include "counters.h"
 
 
+
 // exit code 1 = invalid number of arguments
 // exit code 2 = invalid command given
 int main(int argc, char* argv[]) {
@@ -55,6 +56,10 @@ int main(int argc, char* argv[]) {
     }
     printBoard(b, fp);
 
+    removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
+    printBoard(b, stdout);
+    printf("---------\n");
+
     deleteBoard(b);
     fclose(fp);
 
@@ -62,8 +67,9 @@ int main(int argc, char* argv[]) {
     FILE *fr = fopen("test.out", "r");
     if (!fr) return 5;
     
-    sudoku_t *c = loadBoard(fr);
-    if (c) return 6;
+
+    b = loadBoard(fr);
+    if (!b) return 6;
     fclose(fr);
 
     printBoard(c, stdout);
