@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
     }
 
     char* command = argv[1];
+    srand(time(0));
 
     if (strcmp(command, "create") == 0) {
         printf("Create!\n");
@@ -40,11 +41,12 @@ int main(int argc, char* argv[]) {
     sudoku_t *b = generateBoard();
     if (!b) return 3;
 
-    srand(time(0));
     generateRandomGrid(b, 0, 0);
     generateRandomGrid(b, 3, 3);
     generateRandomGrid(b, 6, 6);
+
     printBoard(b, stdout);
+    printf("---------\n");
 
     FILE *fp = fopen("test.out", "w");
     if (!fp) return 4;
@@ -66,14 +68,13 @@ int main(int argc, char* argv[]) {
     // Test read from file
     FILE *fr = fopen("test.out", "r");
     if (!fr) return 5;
-    
 
     b = loadBoard(fr);
     if (!b) return 6;
     fclose(fr);
 
-    printBoard(c, stdout);
-    deleteBoard(c);
+    printBoard(b, stdout);
+    deleteBoard(b);
 
     return 0;
 }

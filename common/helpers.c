@@ -14,11 +14,9 @@
 #include "board.h"
 #include "counters.h"
 
-counters_t *getRow(sudoku_t *b, int r);
-counters_t *getColumn(sudoku_t *b, int col);
-int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
-#include<stdlib.h>
-#include<stdio.h>
+static counters_t *getRow(sudoku_t *b, int r);
+static counters_t *getColumn(sudoku_t *b, int col);
+static int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
 
 static int getRandNumber(int min, int max);
 
@@ -35,7 +33,6 @@ static int getRandNumber(int min, int max);
  */
 void generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
   if (!b || rStart < 0 || cStart < 0 || b->dimension < rStart + 3 || b->dimension < cStart + 3) return;
-  //srand(time(0));
   counters_t *grid = counters_new();
 
   // Iterate through each row of the 3x3
@@ -58,7 +55,7 @@ void generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
   return;
 }
 
-counters_t *getRow(sudoku_t *b, int r) {
+static counters_t *getRow(sudoku_t *b, int r) {
   counters_t *row = counters_new();
   for (int i = 0; i < b->dimension; i++) {
     if (!(b->board[r][i] == 0)) {
@@ -68,7 +65,7 @@ counters_t *getRow(sudoku_t *b, int r) {
   return row;
 }
 
-counters_t *getColumn(sudoku_t *b, int col) {
+static counters_t *getColumn(sudoku_t *b, int col) {
   counters_t *column = counters_new();
   for (int i = 0; i < b->dimension; i++) {
     if (!(b->board[i][col] == 0)) {
@@ -90,7 +87,7 @@ counters_t *getColumn(sudoku_t *b, int col) {
  * Caller is responsible for: 
  *  Nothing
  */
-int generateRandomNum(counters_t *row, counters_t *column, counters_t *grid) {
+static int generateRandomNum(counters_t *row, counters_t *column, counters_t *grid) {
   int insert;
   while(1) {
     // Generates a random number between 1 and 9
@@ -138,7 +135,6 @@ bool populateBoard(sudoku_t *b) {
 bool removeNumbers(sudoku_t *b, int n) {
   if (!b || (((b->dimension) * (b->dimension)) - MIN_SPACES) < n) return false;
   // printf("N: [%i] < [%i]\n", ((b->dimension) * (b->dimension)) - MIN_SPACES, n);
-  srand(time(0));
 
   int numRemoved = 0;
   while (numRemoved < n) {
