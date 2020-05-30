@@ -18,9 +18,6 @@
 #ifndef __HELPERS_H
 #define __HELPERS_H
 
-// The minimum number of numbers needed to solve a board
-static int MIN_SPACES = 17;
-
 /************ generateRandomGrid ************/
 /*
  * Populates a specified 3x3 grid within the board with numbers 1-9
