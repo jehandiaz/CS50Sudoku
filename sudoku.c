@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 
     printf("THIS SHOULD BE SOLVED PLZ\n");
     
-    if (testSolver(b)) printf("Solved!!\n");
+    if (solveBoard(b)) printf("Solved!!\n");
     else printf("Stop that\n");
 
     printf("Solved board\n");
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     printBoard(b, stdout);
     printf("---------\n");
 
-    if (testSolver(b)) printf("Solved!!\n");
+    if (solveBoard(b)) printf("Solved!!\n");
     else printf("Stop that\n");
 
     printf("Re-solved board\n");
