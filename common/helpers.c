@@ -10,6 +10,9 @@
 #include<stdlib.h>
 #include<stdio.h>
 
+/*********** prototypes **************/
+int getRandNumber(int min, int max);
+
 /************ generateRandomGrid ************/
 /*
  * Populates a specified 3x3 grid within the board with numbers 1-9
@@ -70,7 +73,7 @@ bool removeNumbers(sudoku_t *b, int n) {
     if (isUniqueBoard(b))                       // check if board created is unique
       numRemoved+=1;
     else                                        // reset the item changed to original and run thu loop again
-      b->board[dim1][dim2] = curDim;           
+      b->board[dim1][dim2] = num;           
   }
 
   return true;
