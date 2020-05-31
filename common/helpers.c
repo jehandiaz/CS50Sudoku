@@ -114,24 +114,6 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *gr
   }
   return insert;
 }
-  
-
-/************ populateBoard ************/
-/*
- * Takes a sudoku board and fills it in completely using the solver functionality
- * 
- * Caller provides:
- *  A valid sudoku board
- * We guarantee:
- *  A board with one solution is returned
- * Caller is responsible for:
- *  Nothing
- */
-bool populateBoard(sudoku_t *b) {
-  if (!b) return false;
-   
-  return false;
-}
 
 /************ removeNumbers ************/
 /*
@@ -200,16 +182,6 @@ static int getRandNumber(int min, int max) {
  *  The passed board is solved with one solution or false is returned
  * Caller is responsible for:
  *  Nothing
- */
-
-
-/**
- * Check how many zeros exist
- *  If none, return true
- * 
- * Loop through every number to insert
- *  Loop through every row
- *    Check 
  */
 bool solveBoard(sudoku_t *b) {
   return solveBoardHelper(b, 0);
@@ -314,4 +286,27 @@ static int findArrayRow(sudoku_t *b, int pos) {
 
 static int findArrayCol(sudoku_t *b, int pos) {
   return (int)(pos % b->dimension);
+}
+
+/************ parseDifficulty ************/
+/*
+ * Takes a difficulty value (1-5) and returns how many numbers to remove from the specific board
+ * 
+ * Caller provides:
+ *  A valid difficulty and a valid board
+ * We guarantee:
+ *  A number of spots to remove from the board that can still return a valid board will be returned
+ * Caller is responsible for:
+ *  Nothing
+ */
+int parseDifficulty(sudoku_t *b, int d) {
+  const int minDifficulty = 1;
+  const int maxDifficulty = 5;
+  
+  if (!b || d < minDifficulty || d > maxDifficulty) return 0;
+
+  const int minToRemove = 10;
+  const int maxToRemove = (b->dimension * b->dimension) - MIN_SPACES;
+
+  return (d - minDifficulty) * (maxToRemove - minToRemove) / (maxDifficulty - minDifficulty) + minToRemove;
 }
