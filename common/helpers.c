@@ -19,7 +19,6 @@ int MIN_SPACES = 17;
 /*********** prototypes **************/
 static int getRandNumber(int min, int max);
 
-bool solveBoard(sudoku_t *b);
 static bool solveBoardHelper(sudoku_t *b, int pos);
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v);
 
@@ -113,6 +112,25 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *gr
     }
   }
   return insert;
+}
+
+/************ populateBoard ************/
+/*
+ * Takes a sudoku board and fills it in completely using the solver functionality
+ * 
+ * Caller provides:
+ *  A valid sudoku board
+ * We guarantee:
+ *  A board with one solution is returned
+ * Caller is responsible for:
+ *  Nothing
+ */
+bool populateBoard(sudoku_t *b) {
+  generateRandomGrid(b, 0, 0);
+  generateRandomGrid(b, 3, 3);
+  generateRandomGrid(b, 6, 6);
+
+  return solveBoard(b);
 }
 
 /************ removeNumbers ************/

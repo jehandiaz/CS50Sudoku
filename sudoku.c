@@ -15,7 +15,8 @@
 #include "helpers.h"
 #include "counters.h"
 
-
+const int MAX_ITERATIONS = 30;
+const int DEFAULT_DIFFICULTY = 3;
 
 // exit code 1 = invalid number of arguments
 // exit code 2 = invalid command given
@@ -28,8 +29,35 @@ int main(int argc, char* argv[]) {
     char* command = argv[1];
     srand(time(0));
 
+    sudoku_t *b = NULL;
     if (strcmp(command, "create") == 0) {
         printf("Create!\n");
+
+        b = generateBoard();
+        if (!b) return 2;
+
+        int difficulty = argv[2] ? atoi(argv[2]) : DEFAULT_DIFFICULTY;
+        int numToRemove = parseDifficulty(b, argv[2] ? atoi(argv[2]) : 3);
+        int maxNumIterations = argv[3] ? atoi(argv[3]) : MAX_ITERATIONS;
+
+        printf("Selected difficulty [%i], removing [%i] numbers from board with [%i] maximum tries...\n", difficulty, numToRemove, maxNumIterations);
+
+        // Hold until a valid solution can be created
+        int iterations = 0;
+        while (!populateBoard(b) && iterations < maxNumIterations) { printf("Re-attempting (%i)\n", iterations++); }
+        
+        // If no valid solution was created, creating failed
+        if (iterations == maxNumIterations) {
+            fprintf(stderr, "Could not solve board, exiting...\n");
+            deleteBoard(b);
+            return 3;
+        }
+
+        removeNumbers(b, numToRemove);
+
+        printBoard(b, stdout);
+        deleteBoard(b);
+
     } else if (strcmp(command, "solve") == 0) {
         printf("Solve!\n");
     } else {
@@ -37,63 +65,63 @@ int main(int argc, char* argv[]) {
         return 2;
     }
 
-    // Test save to file
-    sudoku_t *b = generateBoard();
-    if (!b) return 3;
+    // // Test save to file
+    // sudoku_t *b = generateBoard();
+    // if (!b) return 3;
 
-    generateRandomGrid(b, 0, 0);
-    generateRandomGrid(b, 3, 3);
-    generateRandomGrid(b, 6, 6);
+    // generateRandomGrid(b, 0, 0);
+    // generateRandomGrid(b, 3, 3);
+    // generateRandomGrid(b, 6, 6);
 
+    // // printBoard(b, stdout);
+    // // printf("---------\n");
+
+    // FILE *fp = fopen("test.out", "w");
+    // if (!fp) return 4;
+
+    // // for (int r = 0; r < b->dimension; r++) {
+    // //     for (int c = 0; c < b->dimension; c++) {
+    // //         b->board[r][c] = (rand()%9) + 1;
+    // //     }
+    // // }
+    // printBoard(b, fp);
+
+    // // removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
+    // printf("Generated board\n");
     // printBoard(b, stdout);
     // printf("---------\n");
 
-    FILE *fp = fopen("test.out", "w");
-    if (!fp) return 4;
+    // deleteBoard(b);
+    // fclose(fp);
 
-    // for (int r = 0; r < b->dimension; r++) {
-    //     for (int c = 0; c < b->dimension; c++) {
-    //         b->board[r][c] = (rand()%9) + 1;
-    //     }
-    // }
-    printBoard(b, fp);
+    // // Test read from file
+    // FILE *fr = fopen("test.out", "r");
+    // if (!fr) return 5;
+
+    // b = loadBoard(fr);
+    // if (!b) return 6;
+    // fclose(fr);
+
+    // printf("THIS SHOULD BE SOLVED PLZ\n");
+    
+    // if (solveBoard(b)) printf("Solved!!\n");
+    // else printf("Stop that\n");
+
+    // printf("Solved board\n");
+    // printBoard(b, stdout);
+    // printf("---------\n");
 
     // removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
-    printf("Generated board\n");
-    printBoard(b, stdout);
-    printf("---------\n");
+    // printf("Numbers removed\n");
+    // printBoard(b, stdout);
+    // printf("---------\n");
 
-    deleteBoard(b);
-    fclose(fp);
+    // if (solveBoard(b)) printf("Solved!!\n");
+    // else printf("Stop that\n");
 
-    // Test read from file
-    FILE *fr = fopen("test.out", "r");
-    if (!fr) return 5;
-
-    b = loadBoard(fr);
-    if (!b) return 6;
-    fclose(fr);
-
-    printf("THIS SHOULD BE SOLVED PLZ\n");
-    
-    if (solveBoard(b)) printf("Solved!!\n");
-    else printf("Stop that\n");
-
-    printf("Solved board\n");
-    printBoard(b, stdout);
-    printf("---------\n");
-
-    removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
-    printf("Numbers removed\n");
-    printBoard(b, stdout);
-    printf("---------\n");
-
-    if (solveBoard(b)) printf("Solved!!\n");
-    else printf("Stop that\n");
-
-    printf("Re-solved board\n");
-    printBoard(b, stdout);
-    deleteBoard(b);
+    // printf("Re-solved board\n");
+    // printBoard(b, stdout);
+    // deleteBoard(b);
 
     return 0;
 }
