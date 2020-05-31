@@ -17,7 +17,10 @@ MAKE = make
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -o $(PROG)
 
-.PHONY: test clean
+.PHONY: lib test clean
+
+lib:
+	$(MAKE) -C common -B
 
 # test: $(PROG)
 #         echo "Running testing.sh, logging to testing.out..."
