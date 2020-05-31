@@ -142,22 +142,31 @@ bool populateBoard(sudoku_t *b) {
  * We guarantee:
  *  A board with one solution is created
  * We return:
- *  True if numbers removed successfully, false if any error
+ *  True if numbers removed successfully, false if too many iterations or board is non-unique
  * Caller is responsible for:
  *  Nothing
  */
 bool removeNumbers(sudoku_t *b, int n) {
+  int maxChecks = 30 * (b->dimension) * (b->dimension);
+
   if (!b || (((b->dimension) * (b->dimension)) - 17) < n) return false;
   // printf("N: [%i] < [%i]\n", ((b->dimension) * (b->dimension)) - MIN_SPACES, n);
 
-  int numRemoved = 0;
+  int numRemoved, numIterations = 0;
   while (numRemoved < n) {
+    // If the loop has iterated too much, return false
+    if (numIterations++ >= maxChecks) return false;
+
     int dim1 = getRandNumber(0, b->dimension - 1);  // generate random number between 0 and 9
     int dim2 = getRandNumber(0, b->dimension - 1);  // do it again
+
+    // Skip any non-zero spaces
+    if (b->board[dim1][dim2]) continue;
+
     int num = b->board[dim1][dim2];             // store number currently in random slot
     b->board[dim1][dim2] = 0;                   // remove number at randomly chosen slot by setting it to 0
     
-    if (num && true) // solveBoard(b)                          // check if board created is unique
+    if (num && solveBoard(b))                          // check if board created is unique
       numRemoved+=1;
 
     // reset the item changed to original and run thu loop again

@@ -31,29 +31,37 @@ int main(int argc, char* argv[]) {
 
     sudoku_t *b = NULL;
     if (strcmp(command, "create") == 0) {
-        printf("Create!\n");
-
         b = generateBoard();
         if (!b) return 2;
 
+        // Get required parameters for creating board
         int difficulty = argv[2] ? atoi(argv[2]) : DEFAULT_DIFFICULTY;
         int numToRemove = parseDifficulty(b, argv[2] ? atoi(argv[2]) : 3);
         int maxNumIterations = argv[3] ? atoi(argv[3]) : MAX_ITERATIONS;
 
         printf("Selected difficulty [%i], removing [%i] numbers from board with [%i] maximum tries...\n", difficulty, numToRemove, maxNumIterations);
 
-        // Hold until a valid solution can be created
-        int iterations = 0;
-        while (!populateBoard(b) && iterations < maxNumIterations) { printf("Re-attempting (%i)\n", iterations++); }
+        // Hold until a valid solution can be created by creating a board
+        int populateTries = 0;
+        while (!populateBoard(b) && populateTries < maxNumIterations) { printf("Re-attempting populateBoard (%i)\n", populateTries++); }
         
         // If no valid solution was created, creating failed
-        if (iterations == maxNumIterations) {
+        if (populateTries == maxNumIterations) {
             fprintf(stderr, "Could not solve board, exiting...\n");
             deleteBoard(b);
             return 3;
         }
 
-        removeNumbers(b, numToRemove);
+        // Hold until a valid board can be created by removing numbers
+        int removeTries = 0;
+        while (!removeNumbers(b, numToRemove) && removeTries < maxNumIterations) { printf("Re-attempting removeNumbers (%i)\n", removeTries++); }
+
+        // If no valid solution was created, creating failed
+        if (removeTries == maxNumIterations) {
+            fprintf(stderr, "Could not solve board, exiting...\n");
+            deleteBoard(b);
+            return 4;
+        }
 
         printBoard(b, stdout);
         deleteBoard(b);

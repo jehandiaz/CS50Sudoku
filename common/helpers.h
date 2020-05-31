@@ -55,7 +55,7 @@ bool populateBoard(sudoku_t *b);
  * We guarantee:
  *  A board with one solution is created
  * We return:
- *  True if numbers removed successfully, false if any error
+ *  True if numbers removed successfully, false if too many iterations or board is non-unique
  * Caller is responsible for:
  *  Nothing
  */
