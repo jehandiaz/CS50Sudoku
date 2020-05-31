@@ -68,6 +68,25 @@ int main(int argc, char* argv[]) {
 
     } else if (strcmp(command, "solve") == 0) {
         printf("Solve!\n");
+
+        // TODO: Read from other files from cmdline
+        FILE *loadFile = stdin;
+
+        b = loadBoard(loadFile);
+        if (!b) return 2;
+
+        int solveResult = solveBoard(b);
+
+        if (!solveResult) {
+            fprintf(stderr, "Could not find any solutions to loaded board\n");
+        } else if (solveResult == 1) {
+            printf("Solved board!\n");
+            printBoard(b, stdout);
+        } else {
+            fprintf(stderr, "Board not unique\n");
+        }
+
+        deleteBoard(b);
     } else {
         fprintf(stderr, "ERROR: Command must be either 'create' or 'solve'\n");
         return 2;
