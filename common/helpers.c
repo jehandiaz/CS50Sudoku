@@ -19,8 +19,9 @@ int MIN_SPACES = 17;
 /*********** prototypes **************/
 static int getRandNumber(int min, int max);
 
-bool solveBoard(sudoku_t *b);
+int solveBoard(sudoku_t *b);
 static bool solveBoardHelper(sudoku_t *b, int pos);
+static int isUniqueBoard(int i, int j, sudoku_t* b, int count);
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v);
 
 static bool checkRow(sudoku_t *b, int r, int c, int v);
@@ -211,9 +212,41 @@ static int getRandNumber(int min, int max) {
  *  Loop through every row
  *    Check 
  */
-bool solveBoard(sudoku_t *b) {
-  return solveBoardHelper(b, 0);
+int solveBoard(sudoku_t *b) {
+  int numSols;
+  //if ((numSols = isUniqueBoard(0, 0, b, 0)) != 1) return numSols;
+  numSols = isUniqueBoard(0, 0, b, 0);
+  solveBoardHelper(b, 0);
+  return numSols;
 }
+
+
+
+static int isUniqueBoard(int i, int j, sudoku_t* b, int count) {
+  if (i == 9) {
+        i = 0;
+        if (++j == 9)
+            return 1+count;
+  }
+
+  if (b->board[i][j] != 0)  // skip filled cells
+      return isUniqueBoard(i+1,j,b, count);
+  // search for 2 solutions instead of 1
+  // break, if 2 solutions are found
+  for (int val = 1; val <= 9 && count < 2; ++val) {
+      if (!isNumberPresent(b,i,j,val)) {
+          b->board[i][j] = val;
+          // add additional solutions
+          count = isUniqueBoard(i+1,j,b, count);
+      }
+  }
+  
+  b->board[i][j] = 0; // reset on backtrack
+  return count;
+}
+
+  
+
 
 static bool solveBoardHelper(sudoku_t *b, int pos) {
 
@@ -255,6 +288,8 @@ static bool solveBoardHelper(sudoku_t *b, int pos) {
   return true;
 }
 
+
+
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v) {
   if (checkRow(b, r, c, v)) { 
     // printf("Row invalid\n");
@@ -274,6 +309,7 @@ static bool isNumberPresent(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
+
 static bool checkRow(sudoku_t *b, int r, int c, int v) {
   for (int j = 0; j < b->dimension; j++) {
     // printf("ROW [%i] -> [%i] ?= [%i]\n", r, b->board[r][j], v);
@@ -284,6 +320,7 @@ static bool checkRow(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
+
 static bool checkCol(sudoku_t *b, int r, int c, int v) {
   for (int i = 0; i < b->dimension; i++) {
     if (i == r) continue;
@@ -292,6 +329,7 @@ static bool checkCol(sudoku_t *b, int r, int c, int v) {
 
   return false;
 }
+
 
 static bool checkGrid(sudoku_t *b, int r, int c, int v) {
   int rStart = (int)(r / 3) * 3;
