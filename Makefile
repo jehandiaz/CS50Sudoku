@@ -20,7 +20,7 @@ $(PROG): $(OBJS)
 .PHONY: lib test clean
 
 lib:
-	$(MAKE) -C common -B
+	$(MAKE) -C common
 
 # test: $(PROG)
 #         echo "Running testing.sh, logging to testing.out..."
