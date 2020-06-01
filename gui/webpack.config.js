@@ -3,7 +3,8 @@ const path = require("path");
 const config = {
   entry: {
     vendor: ["@babel/polyfill", "react"],
-    solve: ["./components/index.js"]
+    solveEnter: ["./components/solveEnter.js"],
+    solvedBoard: ["./components/solvedBoard.js"]
   },
   output: {
     path: path.resolve(__dirname, "public"),

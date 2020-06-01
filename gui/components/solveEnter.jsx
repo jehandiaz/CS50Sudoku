@@ -1,6 +1,6 @@
 import React from "react";
 
-class App extends React.Component {
+class SolveEnter extends React.Component {
   constructor() {
     super();
     this.handleButtonClick = this.handleButtonClick.bind(this);
@@ -42,7 +42,7 @@ class App extends React.Component {
     }
     return (
       //do something here where there is a button that will replace the text
-      <div>
+      <div className="test">
         <label>Your name </label>
         <input
           type="text"
@@ -57,6 +57,7 @@ class App extends React.Component {
         <button id="btnReset" onClick={this.handleReset}>
           Reset All
         </button>
+        <button type="button" onClick={() => window.open("/solve/sadsakjdnasdaesanamsnd")}>Submit Board</button>
         <hr />
         {msg}
       </div>
@@ -64,4 +65,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default SolveEnter;

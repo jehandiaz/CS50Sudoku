@@ -1,8 +1,9 @@
-import express from "express";
-import Solve from "../components/solve";
 import React from "react";
+import express from "express";
 import { renderToString } from "react-dom/server";
 import hbs from "handlebars";
+
+import Solve from "../components/solveEnter";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
       <body>
         <h1>Create</h1>
         <div id="reactele">{{{reactele}}}</div>
-        <script src="/solve.js" charset="utf-8"></script>
+        <script src="/solveEnter.js" charset="utf-8"></script>
         <script src="/vendor.js" charset="utf-8"></script>
       </body>
     </html>

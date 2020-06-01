@@ -3,7 +3,7 @@
 import express from "express";
 import compression from "compression";
 import createRoute from "./routes/createRoute";
-import solveRoute from "./routes/solveRoute";
+import solveRoute from "./routes/solvedBoardRoute";
 const app = express();
 
 app.use(compression());
