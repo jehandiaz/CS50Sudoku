@@ -19,8 +19,8 @@ int MIN_SPACES = 17;
 /*********** prototypes **************/
 static int getRandNumber(int min, int max);
 
-bool solveBoard(sudoku_t *b);
 static bool solveBoardHelper(sudoku_t *b, int pos);
+static int isUniqueBoard(int i, int j, sudoku_t* b, int count);
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v);
 
 static bool checkRow(sudoku_t *b, int r, int c, int v);
@@ -114,7 +114,6 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *gr
   }
   return insert;
 }
-  
 
 /************ populateBoard ************/
 /*
@@ -128,9 +127,11 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *gr
  *  Nothing
  */
 bool populateBoard(sudoku_t *b) {
-  if (!b) return false;
-   
-  return false;
+  generateRandomGrid(b, 0, 0);
+  generateRandomGrid(b, 3, 3);
+  generateRandomGrid(b, 6, 6);
+
+  return solveBoard(b);
 }
 
 /************ removeNumbers ************/
@@ -142,22 +143,31 @@ bool populateBoard(sudoku_t *b) {
  * We guarantee:
  *  A board with one solution is created
  * We return:
- *  True if numbers removed successfully, false if any error
+ *  True if numbers removed successfully, false if too many iterations or board is non-unique
  * Caller is responsible for:
  *  Nothing
  */
 bool removeNumbers(sudoku_t *b, int n) {
+  int maxChecks = 30 * (b->dimension) * (b->dimension);
+
   if (!b || (((b->dimension) * (b->dimension)) - 17) < n) return false;
   // printf("N: [%i] < [%i]\n", ((b->dimension) * (b->dimension)) - MIN_SPACES, n);
 
-  int numRemoved = 0;
+  int numRemoved, numIterations = 0;
   while (numRemoved < n) {
+    // If the loop has iterated too much, return false
+    if (numIterations++ >= maxChecks) return false;
+
     int dim1 = getRandNumber(0, b->dimension - 1);  // generate random number between 0 and 9
     int dim2 = getRandNumber(0, b->dimension - 1);  // do it again
+
+    // Skip any non-zero spaces
+    if (b->board[dim1][dim2]) continue;
+
     int num = b->board[dim1][dim2];             // store number currently in random slot
     b->board[dim1][dim2] = 0;                   // remove number at randomly chosen slot by setting it to 0
     
-    if (num && true) // solveBoard(b)                          // check if board created is unique
+    if (num && solveBoard(b))                          // check if board created is unique
       numRemoved+=1;
 
     // reset the item changed to original and run thu loop again
@@ -202,7 +212,6 @@ static int getRandNumber(int min, int max) {
  *  Nothing
  */
 
-
 /**
  * Check how many zeros exist
  *  If none, return true
@@ -211,9 +220,39 @@ static int getRandNumber(int min, int max) {
  *  Loop through every row
  *    Check 
  */
-bool solveBoard(sudoku_t *b) {
-  return solveBoardHelper(b, 0);
+int solveBoard(sudoku_t *b) {
+  int numSols;
+  //if ((numSols = isUniqueBoard(0, 0, b, 0)) != 1) return numSols;
+  numSols = isUniqueBoard(0, 0, b, 0);
+  solveBoardHelper(b, 0);
+  return numSols;
 }
+
+static int isUniqueBoard(int i, int j, sudoku_t* b, int count) {
+  if (i == 9) {
+        i = 0;
+        if (++j == 9)
+            return 1+count;
+  }
+
+  if (b->board[i][j] != 0)  // skip filled cells
+      return isUniqueBoard(i+1,j,b, count);
+  // search for 2 solutions instead of 1
+  // break, if 2 solutions are found
+  for (int val = 1; val <= 9 && count < 2; ++val) {
+      if (!isNumberPresent(b,i,j,val)) {
+          b->board[i][j] = val;
+          // add additional solutions
+          count = isUniqueBoard(i+1,j,b, count);
+      }
+  }
+  
+  b->board[i][j] = 0; // reset on backtrack
+  return count;
+}
+
+  
+
 
 static bool solveBoardHelper(sudoku_t *b, int pos) {
 
@@ -255,6 +294,8 @@ static bool solveBoardHelper(sudoku_t *b, int pos) {
   return true;
 }
 
+
+
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v) {
   if (checkRow(b, r, c, v)) { 
     // printf("Row invalid\n");
@@ -274,6 +315,7 @@ static bool isNumberPresent(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
+
 static bool checkRow(sudoku_t *b, int r, int c, int v) {
   for (int j = 0; j < b->dimension; j++) {
     // printf("ROW [%i] -> [%i] ?= [%i]\n", r, b->board[r][j], v);
@@ -284,6 +326,7 @@ static bool checkRow(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
+
 static bool checkCol(sudoku_t *b, int r, int c, int v) {
   for (int i = 0; i < b->dimension; i++) {
     if (i == r) continue;
@@ -292,6 +335,7 @@ static bool checkCol(sudoku_t *b, int r, int c, int v) {
 
   return false;
 }
+
 
 static bool checkGrid(sudoku_t *b, int r, int c, int v) {
   int rStart = (int)(r / 3) * 3;
@@ -314,4 +358,27 @@ static int findArrayRow(sudoku_t *b, int pos) {
 
 static int findArrayCol(sudoku_t *b, int pos) {
   return (int)(pos % b->dimension);
+}
+
+/************ parseDifficulty ************/
+/*
+ * Takes a difficulty value (1-5) and returns how many numbers to remove from the specific board
+ * 
+ * Caller provides:
+ *  A valid difficulty and a valid board
+ * We guarantee:
+ *  A number of spots to remove from the board that can still return a valid board will be returned
+ * Caller is responsible for:
+ *  Nothing
+ */
+int parseDifficulty(sudoku_t *b, int d) {
+  const int minDifficulty = 1;
+  const int maxDifficulty = 5;
+  
+  if (!b || d < minDifficulty || d > maxDifficulty) return 0;
+
+  const int minToRemove = 10;
+  const int maxToRemove = (b->dimension * b->dimension) - MIN_SPACES;
+
+  return (d - minDifficulty) * (maxToRemove - minToRemove) / (maxDifficulty - minDifficulty) + minToRemove;
 }
