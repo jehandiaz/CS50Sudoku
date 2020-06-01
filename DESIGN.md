@@ -99,6 +99,6 @@ typedef struct sudoku {
 
 **Unit testing** - A small test program in `testing.sh` to test each module to make sure it does what it's supposed to do. This includes, but is not limited to, error checking, such as providing the *solver* with sudoku boards without solutions and/or with non-unique solutions.
 
-**Integration testing** - We will take known sudoku boards and run them through the *solver*, and then check the output against the valid solutions that we know to be true. Once this is done, we will also test the *create* functionality using the *solver* module, which we can run generated sudoku boards through to make sure they are valid. 
+**Integration testing** - We will take known sudoku boards and run them through the *solver*, and then check the output against the valid solutions that we know to be true. Once this is done, we will also test the *create* functionality using the *solver* module, which we can run generated sudoku boards through to make sure they are valid.
 
 **Fuzztesting** - We will create a program that continuously generates sudoku boards using the *create* functionality and then runs these through the *solver*. If any boards are labeled invalid by the *solver* we will check them manually to determine if the error is within the *create* or *solve* functional modules.
