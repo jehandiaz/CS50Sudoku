@@ -72,7 +72,7 @@ bool removeNumbers(sudoku_t *b, int n);
  * Caller is responsible for:
  *  Nothing
  */
-bool solveBoard(sudoku_t *b);
+int solveBoard(sudoku_t *b);
 
 /************ parseDifficulty ************/
 /*
