@@ -3,13 +3,14 @@
 import express from "express";
 import compression from "compression";
 import createRoute from "./routes/createRoute";
+import solveRoute from "./routes/solveRoute";
 const app = express();
 
 app.use(compression());
 app.use(express.static("public"));
 
 app.use("/create", createRoute);
-app.use("/solve", createRoute);
+app.use("/solve", solveRoute);
 
 const port = process.env.PORT || 3030;
 app.listen(port, function listenHandler() {

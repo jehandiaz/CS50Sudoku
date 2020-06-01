@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     <html>
       <head><title>Team Rocket's Sudoku</title></head>
       <body>
-        <h1>My First Server Side Render</h1>
+        <h1>Create</h1>
         <div id="reactele">{{{reactele}}}</div>
         <script src="/solve.js" charset="utf-8"></script>
         <script src="/vendor.js" charset="utf-8"></script>
@@ -20,8 +20,8 @@ router.get("/", async (req, res) => {
   `;
 
   const hbsTemplate = hbs.compile(theHtml);
-  const solveComp = renderToString(<Solve />);
-  const htmlToSend = hbsTemplate({ reactele: solveComp });
+  const createComp = renderToString(<Solve />);
+  const htmlToSend = hbsTemplate({ reactele: createComp });
   res.send(htmlToSend);
 });
 
