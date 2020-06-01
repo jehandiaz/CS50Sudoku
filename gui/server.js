@@ -2,13 +2,14 @@
 
 import express from "express";
 import compression from "compression";
-import ssr from "./routes/ssr";
+import createRoute from "./routes/createRoute";
 const app = express();
 
 app.use(compression());
 app.use(express.static("public"));
 
-app.use("/create", ssr);
+app.use("/create", createRoute);
+app.use("/solve", createRoute);
 
 const port = process.env.PORT || 3030;
 app.listen(port, function listenHandler() {
