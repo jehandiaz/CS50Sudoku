@@ -46,13 +46,13 @@ app.post('/solve', (req, res) => {
 
   const boardFileName = "./tmp/" + Date.now();
   const boardString = boardToString(board);
-  console.log("file name", boardFileName, boardString);
+  // console.log("file name", boardFileName, boardString);
   fs.writeFile(boardFileName, boardString, "utf8", (error) => {
     if (error) {
       return res.status(500).json(error);
     }
 
-    console.log("File written");
+    // console.log("File written");
 
     new Promise((resolve, reject) => {
       const terminal = spawn('bash');
@@ -63,13 +63,13 @@ app.post('/solve', (req, res) => {
       // Data handler for stdout
       terminal.stdout.on('data', (data) => {
         stdoutString += data.toString();
-        console.log("stdout", data.toString());
+        // console.log("stdout", data.toString());
       });
   
       // Data handler for stdin
       terminal.stderr.on('data', (data) => {
         stderrString += data.toString();
-        console.log("stderr", data.toString());
+        // console.log("stderr", data.toString());
       });
   
       // Process exit handler
