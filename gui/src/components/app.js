@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { createBoard } from '../actions';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,9 +13,11 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>App!</div>
+      <div className="app-container">
+        <button type="button" onClick={() => this.props.createBoard(3)}>Button</button>
+      </div>
     );
   }
 }
 
-export default App;
+export default connect(null, { createBoard })(App);
