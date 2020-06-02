@@ -70,7 +70,7 @@ int main (int argc, char *argv[])
  *  Freeing memory
  */
 bool isBoardChanged(sudoku_t *b, sudoku_t *solved) {
-    for (int i = 0; i < b->dimension; i++) {
+    for (int i = 0; i < b->dimension; i++) {                // loop
         for (int j = 0; j < b->dimension; j++) {
             int cell = b->board[i][j];
             if ((cell != 0) && (cell != solved->board[i][j])) return true;
