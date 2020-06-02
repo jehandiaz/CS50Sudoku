@@ -58,3 +58,4 @@ output
 /sudoku-gui/server-build/
 /sudoku-gui/node_modules/
 /sudoku-gui/build/
+fuzztest

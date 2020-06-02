@@ -22,6 +22,9 @@ $(PROG): $(OBJS)
 lib:
 	$(MAKE) -C common
 
+fuzztest: fuzztest.o
+	$(CC) $(CFLAGS) $^ $(LLIBS) -o $@
+
 # test: $(PROG)
 #         echo "Running testing.sh, logging to testing.out..."
 #         bash -v testing.sh > /dev/null 2>&1
@@ -30,4 +33,6 @@ lib:
 clean:
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROG)
+	rm -f fuzztest
+	$(MAKE) -C common clean
 	rm -f core
