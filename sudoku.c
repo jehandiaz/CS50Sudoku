@@ -37,15 +37,15 @@ int main(int argc, char* argv[]) {
 
         // Get required parameters for creating board
         int difficulty = argv[2] ? atoi(argv[2]) : DEFAULT_DIFFICULTY;
-        int numToRemove = parseDifficulty(b, argv[2] ? atoi(argv[2]) : 3);
+        int numToRemove = parseDifficulty(b, difficulty);
         // int numToRemove = atoi(argv[2]);
         int maxNumIterations = argv[3] ? atoi(argv[3]) : MAX_ITERATIONS;
 
-        printf("Selected difficulty [%i], removing [%i] numbers from board with [%i] maximum tries...\n", difficulty, numToRemove, maxNumIterations);
+        // printf("Selected difficulty [%i], removing [%i] numbers from board with [%i] maximum tries...\n", difficulty, numToRemove, maxNumIterations);
 
         // Hold until a valid solution can be created by creating a board
         int populateTries = 0;
-        while (!populateBoard(b) && populateTries < maxNumIterations) { printf("Re-attempting populateBoard (%i)\n", populateTries++); }
+        while (!populateBoard(b) && populateTries < maxNumIterations) { fprintf(stderr, "Re-attempting populateBoard (%i)\n", populateTries++); }
         
         // If no valid solution was created, creating failed
         if (populateTries == maxNumIterations) {
@@ -56,8 +56,8 @@ int main(int argc, char* argv[]) {
         
         // Hold until a valid board can be created by removing numbers
         int removeTries = 0;
-        printf("num to be removed: %d\n", numToRemove);
-        while (!removeNumbers(b, numToRemove) && removeTries < maxNumIterations) { printf("Re-attempting removeNumbers (%i)\n", removeTries++); }
+        // printf("num to be removed: %d\n", numToRemove);
+        while (!removeNumbers(b, numToRemove) && removeTries < maxNumIterations) { fprintf(stderr, "Re-attempting removeNumbers (%i)\n", removeTries++); }
 
         // If no valid solution was created, creating failed
         if (removeTries == maxNumIterations) {
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         deleteBoard(b);
     
     } else if (strcmp(command, "solve") == 0) {
-        printf("Solve!\n");
+        // printf("Solve!\n");
 
         // TODO: Read from other files from cmdline
         FILE *loadFile = stdin;
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
         if (!solveResult) {
             fprintf(stderr, "Could not find any solutions to loaded board\n");
         } else if (solveResult == 1) {
-            printf("Solved board!\n");
+            // printf("Solved board!\n");
             printBoard(b, stdout);
         } else {
             fprintf(stderr, "Board not unique\n");
