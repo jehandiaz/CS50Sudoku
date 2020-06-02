@@ -34,5 +34,5 @@ clean:
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROG)
 	rm -f fuzztest
-	rm -d core
+	rm -f core
 	$(MAKE) -C common clean
