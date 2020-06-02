@@ -1,36 +1,71 @@
 @import '../constants/variables.scss';
 
+$board-dimension: 607px;
 $cell-dimension: 30px;
 
 .app-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 
   .app-board-container {
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+    width: $board-dimension;
+    height: $board-dimension;
+
+    background-color: $background;
+    box-shadow: $default-shadow;
+
     .app-board-row-container {
       display: flex;
       flex-direction: row;
+      width: $board-dimension;
+      height: calc(#{$board-dimension} / 9);
+
+      &:first-child {
+        border-top: 2px solid $light-gray;
+      }
+
+      &:nth-child(3n) td {
+        border-bottom: 2px solid $light-gray;
+      }
 
       .app-board-cell-container {
         display: flex;
-        
-        color: green;
-        width: $cell-dimension;
-        height: $cell-dimension;
 
+        width: calc(#{$board-dimension} / 9);
+        height: calc(#{$board-dimension} / 9);
+
+        border: 1px solid $light-gray;
+        text-align: center;
         cursor: pointer;
+        
+        &:first-child {
+          border-left: 2px solid $light-gray;
+        }
+
+        &:nth-child(3n) {
+          border-right: 2px solid $light-gray;
+        }
 
         &:hover {
-          background-color: deepskyblue;
+          background-color: $yellow;
         }
 
         &.highlighted {
-          background-color: gainsboro;
-        }
-
-        p {
-          margin: auto;
+          background-color: $white;
         }
       }
+    }
+
+    p {
+      color: $text-gray;
+      font-size: 42px;
+      font-weight: normal;
+      margin: auto;
     }
   }
 }
