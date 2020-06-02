@@ -76,20 +76,23 @@ class App extends React.Component {
       <div className="app-container">
         <h1>Team Rocket Sudoku Solver</h1>
 
+        <label htmlFor="app-difficulty">
+          Difficulty (1-5)<br />
+          <input
+            id="app-difficulty"
+            type="number"
+            min={1}
+            max={5}
+            value={this.state.difficulty}
+            onChange={e => this.setState({ difficulty: e.target.value })}
+          />
+        </label>
+
         <button type="button" onClick={() => this.props.createBoard(this.state.difficulty)}>Create Board</button>
         <button type="button" onClick={() => this.props.solveBoard(this.props.board, this.props.dimension)}>Solve Board</button>
-        <input
-          type="number"
-          min={1}
-          max={5}
-          value={this.state.difficulty}
-          onChange={e => this.setState({ difficulty: e.target.value })}
-        />
 
         <div style={{ height: '60px' }} />
-
         {this.renderBoard()}
-
       </div>
     );
   }
