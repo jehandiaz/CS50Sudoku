@@ -54,3 +54,4 @@ dkms.conf
 # Other files
 sudoku
 output
+fuzztest
