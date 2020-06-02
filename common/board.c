@@ -6,9 +6,15 @@
  */
 
 #include "board.h"
-
 #include <stdlib.h>
 #include <stdbool.h>
+
+
+typedef struct sudoku {
+  int **board;   // Points to a 2D array of values holding the board
+  int dimension; // Tells parsers how long each row and column are
+} sudoku_t;
+
 
 /************ generateBoard ************/
 /*
@@ -27,11 +33,11 @@ sudoku_t *generateBoard() {
   sudoku_t *newBoard = malloc(sizeof(sudoku_t));
   if (!newBoard) return NULL;
 
-   int **newBoardArray = calloc(boardSize, sizeof(int *));
+  int** newBoardArray = calloc(boardSize, sizeof(int *));
   if (!newBoardArray) return NULL;
 
   for (int i = 0; i < boardSize; i++) {
-    int *temp = calloc(boardSize, sizeof(int));
+    int* temp = calloc(boardSize, sizeof(int));
     if (!temp) return NULL;
     newBoardArray[i] = temp;
   }

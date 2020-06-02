@@ -17,7 +17,10 @@ MAKE = make
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -o $(PROG)
 
-.PHONY: test clean
+.PHONY: lib test clean
+
+lib:
+	$(MAKE) -C common
 
 fuzztest: fuzztest.o
 	$(CC) $(CFLAGS) $^ $(LLIBS) -o $@
