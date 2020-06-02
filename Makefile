@@ -19,6 +19,9 @@ $(PROG): $(OBJS)
 
 .PHONY: test clean
 
+fuzztest: fuzztest.o
+	$(CC) $(CFLAGS) $^ $(LLIBS) -o $@
+
 # test: $(PROG)
 #         echo "Running testing.sh, logging to testing.out..."
 #         bash -v testing.sh > /dev/null 2>&1
@@ -27,4 +30,6 @@ $(PROG): $(OBJS)
 clean:
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROG)
+	rm -f fuzztest
 	rm -d core
+	$(MAKE) -C common clean
