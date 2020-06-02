@@ -1,6 +1,9 @@
 @import './constants/variables.scss';
 
-body, html {
+body, html, #main {
+    display: flex;
+    flex-direction: column;
+    
     height: 100%;
     margin: 0;
 }
