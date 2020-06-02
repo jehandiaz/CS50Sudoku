@@ -32,11 +32,13 @@ int main(int argc, char* argv[]) {
     sudoku_t *b = NULL;
     if (strcmp(command, "create") == 0) {
         b = generateBoard();
-        if (!b) return 2;
+        if (!b) return 3;
+
 
         // Get required parameters for creating board
         int difficulty = argv[2] ? atoi(argv[2]) : DEFAULT_DIFFICULTY;
         int numToRemove = parseDifficulty(b, argv[2] ? atoi(argv[2]) : 3);
+        // int numToRemove = atoi(argv[2]);
         int maxNumIterations = argv[3] ? atoi(argv[3]) : MAX_ITERATIONS;
 
         printf("Selected difficulty [%i], removing [%i] numbers from board with [%i] maximum tries...\n", difficulty, numToRemove, maxNumIterations);
@@ -49,11 +51,12 @@ int main(int argc, char* argv[]) {
         if (populateTries == maxNumIterations) {
             fprintf(stderr, "Could not solve board, exiting...\n");
             deleteBoard(b);
-            return 3;
+            return 4;
         }
-
+        
         // Hold until a valid board can be created by removing numbers
         int removeTries = 0;
+        printf("num to be removed: %d\n", numToRemove);
         while (!removeNumbers(b, numToRemove) && removeTries < maxNumIterations) { printf("Re-attempting removeNumbers (%i)\n", removeTries++); }
 
         // If no valid solution was created, creating failed
@@ -63,9 +66,14 @@ int main(int argc, char* argv[]) {
             return 4;
         }
 
+        FILE *fp;
+        fp = fopen("test.out", "w");
+        printBoard(b, fp);
+        fclose(fp);
+
         printBoard(b, stdout);
         deleteBoard(b);
-
+    
     } else if (strcmp(command, "solve") == 0) {
         printf("Solve!\n");
 
@@ -73,7 +81,7 @@ int main(int argc, char* argv[]) {
         FILE *loadFile = stdin;
 
         b = loadBoard(loadFile);
-        if (!b) return 2;
+        if (!b) return 3;
 
         int solveResult = solveBoard(b);
 

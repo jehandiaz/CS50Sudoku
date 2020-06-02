@@ -17,10 +17,10 @@
 int MIN_SPACES = 17;
 
 /*********** prototypes **************/
+static int generateRandomNum(sudoku_t * b, int row, int column);
 static int getRandNumber(int min, int max);
 
 static bool solveBoardHelper(sudoku_t *b, int pos);
-static int isUniqueBoard(int i, int j, sudoku_t* b, int count);
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v);
 
 static bool checkRow(sudoku_t *b, int r, int c, int v);
@@ -29,10 +29,6 @@ static bool checkGrid(sudoku_t *b, int r, int c, int v);
 
 static int findArrayRow(sudoku_t *b, int pos);
 static int findArrayCol(sudoku_t *b, int pos);
-
-static counters_t *getRow(sudoku_t *b, int r);
-static counters_t *getColumn(sudoku_t *b, int col);
-static int generateRandomNum(counters_t *row, counters_t *column, counters_t *cell);
 
 /************ generateRandomGrid ************/
 /*
@@ -47,47 +43,22 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *ce
  */
 void generateRandomGrid(sudoku_t *b, int rStart, int cStart) {
   if (!b || rStart < 0 || cStart < 0 || b->dimension < rStart + 3 || b->dimension < cStart + 3) return;
-  counters_t *grid = counters_new();
 
   // Iterate through each row of the 3x3
   for (int i = rStart; i < rStart + 3; i++) {
-    counters_t *row = getRow(b, rStart);
 
     // Iterate through each column of the 3x3
     for (int j = cStart; j < cStart + 3; j++) {
-      counters_t *column = getColumn(b, cStart);
-      int insert = generateRandomNum(row, column, grid);
-      counters_add(grid, insert);
-      b->board[i][j] = insert;
-      counters_delete(column);
-      } 
-      
-    counters_delete(row);
-  }
 
-  counters_delete(grid);
+      int insert = generateRandomNum(b, i, j);
+      if (!(checkGrid(b, i, j, insert))) {
+        b->board[i][j] = insert;
+      }
+    } 
+  }
   return;
 }
 
-static counters_t *getRow(sudoku_t *b, int r) {
-  counters_t *row = counters_new();
-  for (int i = 0; i < b->dimension; i++) {
-    if (!(b->board[r][i] == 0)) {
-      counters_add(row, b->board[r][i]);
-    }
-  }
-  return row;
-}
-
-static counters_t *getColumn(sudoku_t *b, int col) {
-  counters_t *column = counters_new();
-  for (int i = 0; i < b->dimension; i++) {
-    if (!(b->board[i][col] == 0)) {
-      counters_add(column, b->board[i][col]);
-    }
-  }
-  return column;
-}
 
 /********** generateRandomNum **********/
 /* 
@@ -101,18 +72,18 @@ static counters_t *getColumn(sudoku_t *b, int col) {
  * Caller is responsible for: 
  *  Nothing
  */
-static int generateRandomNum(counters_t *row, counters_t *column, counters_t *grid) {
+static int generateRandomNum(sudoku_t * b, int row, int column) {
   int insert;
   while(1) {
     // Generates a random number between 1 and 9
-    insert = (rand()%9) + 1;
+    insert = getRandNumber(1, 9);
 
     // Check if that number is in the current row, column, and cell
-    if (counters_get(row, insert) == 0 && counters_get(column, insert) == 0 && counters_get(grid, insert) == 0) {
+    if (!(checkGrid(b, row, column, insert))) {
       return insert;
     }
   }
-  return insert;
+  return 0;
 }
 
 /************ populateBoard ************/
@@ -120,13 +91,14 @@ static int generateRandomNum(counters_t *row, counters_t *column, counters_t *gr
  * Takes a sudoku board and fills it in completely using the solver functionality
  * 
  * Caller provides:
- *  A valid sudoku board
+ *  A valid, empty sudoku board
  * We guarantee:
- *  A board with one solution is returned
+ *  The board returned is completely filled
  * Caller is responsible for:
- *  Nothing
+ *  Freeing all memory
  */
 bool populateBoard(sudoku_t *b) {
+  // Populate the diagonal 3x3 grids 
   generateRandomGrid(b, 0, 0);
   generateRandomGrid(b, 3, 3);
   generateRandomGrid(b, 6, 6);
@@ -148,39 +120,36 @@ bool populateBoard(sudoku_t *b) {
  *  Nothing
  */
 bool removeNumbers(sudoku_t *b, int n) {
-  int maxChecks = 30 * (b->dimension) * (b->dimension);
+  long int maxChecks =  30000;
 
   if (!b || (((b->dimension) * (b->dimension)) - 17) < n) return false;
-  // printf("N: [%i] < [%i]\n", ((b->dimension) * (b->dimension)) - MIN_SPACES, n);
 
-  int numRemoved, numIterations = 0;
+  int numRemoved = 0;
+  int numIterations = 0;
   while (numRemoved < n) {
+    
     // If the loop has iterated too much, return false
     if (numIterations++ >= maxChecks) return false;
 
     int dim1 = getRandNumber(0, b->dimension - 1);  // generate random number between 0 and 9
     int dim2 = getRandNumber(0, b->dimension - 1);  // do it again
 
-    // Skip any non-zero spaces
+    // Skip any zero spaces
     if (!(b->board[dim1][dim2])) continue;
 
     int num = b->board[dim1][dim2];             // store number currently in random slot
     b->board[dim1][dim2] = 0;                   // remove number at randomly chosen slot by setting it to 0
     
-    if (num && solveBoard(b))                          // check if board created is unique
+    if (isUniqueBoard(0, 0, b, 0) == 1)         // check if board created has unique solution
       numRemoved+=1;
 
-    // reset the item changed to original and run thu loop again
-    else {                                        
+    // reset the item changed to original and run through loop again
+    else                                      
       b->board[dim1][dim2] = num;
-    }
-
-    // printf("Current state: board[%i][%i] = %i, numRemoved: [%i]\n", dim1, dim2, b->board[dim1][dim2], numRemoved);
   }
 
   return true;
 }
-
 
 /************ getRandomNumber ************/
 /*
@@ -195,9 +164,7 @@ bool removeNumbers(sudoku_t *b, int n) {
 *   Nothing
 */
 static int getRandNumber(int min, int max) {
-  int returnValue = rand() % (max - min + 1) + min;
-  // printf("Rand generate [%i]\n", returnValue);
-  return (returnValue);
+  return (rand() % (max - min + 1) + min);
 }
 
 /************ solveBoard ************/
@@ -211,39 +178,44 @@ static int getRandNumber(int min, int max) {
  * Caller is responsible for:
  *  Nothing
  */
-
-/**
- * Check how many zeros exist
- *  If none, return true
- * 
- * Loop through every number to insert
- *  Loop through every row
- *    Check 
- */
 int solveBoard(sudoku_t *b) {
-  int numSols;
-  //if ((numSols = isUniqueBoard(0, 0, b, 0)) != 1) return numSols;
-  numSols = isUniqueBoard(0, 0, b, 0);
+  int numSols = isUniqueBoard(0, 0, b, 0);
   solveBoardHelper(b, 0);
   return numSols;
 }
 
-static int isUniqueBoard(int i, int j, sudoku_t* b, int count) {
-  if (i == 9) {
-        i = 0;
-        if (++j == 9)
-            return 1+count;
+/* 
+ * Returns the number of solutions that a sudoku grid has 
+ * 
+ * Caller provides: 
+ *  A valid sudoku grid, a position (0, 0) to start at, the number of solutions
+ * We guarantee: 
+ *  Returns 0 if no solutions, 1 if board has a unique solution, 2 if board 
+ *  has multiple solutions
+ *  The passed board is not changed 
+ * Caller is responsible for:
+ *  Calling deleteBoard
+ * 
+ * This code takes inspiration from:
+ *  https://stackoverflow.com/questions/24343214/determine-whether-a-sudoku-has-a-unique-solution
+ */
+int isUniqueBoard(int i, int j, sudoku_t* b, int count) {
+  if (j == 9) {        // if we have gotten to the end of the first row
+        j = 0;
+        if (++i == 9)  // if we have gotten to end of the board
+            return count+1;
   }
 
   if (b->board[i][j] != 0)  // skip filled cells
-      return isUniqueBoard(i+1,j,b, count);
+      return isUniqueBoard(i, j + 1, b, count);
+
   // search for 2 solutions instead of 1
-  // break, if 2 solutions are found
+  // return, if 2 solutions are found
   for (int val = 1; val <= 9 && count < 2; ++val) {
-      if (!isNumberPresent(b,i,j,val)) {
+      if (!isNumberPresent(b, i, j, val)) {
           b->board[i][j] = val;
           // add additional solutions
-          count = isUniqueBoard(i+1,j,b, count);
+          count = isUniqueBoard(i, j + 1, b, count);
       }
   }
   
@@ -251,9 +223,20 @@ static int isUniqueBoard(int i, int j, sudoku_t* b, int count) {
   return count;
 }
 
-  
 
-
+/* 
+ * Helper function to solve board, tries plugging in all possible values 
+ * and backtracks with recursion until solved
+ * 
+ * Caller provides:
+ *  A unique, unsolved board 
+ *  A start position, 0
+ * We guarantee: 
+ *  Return true if board is solved, false if the board remains unsolved 
+ *  Board is solved after function returns 
+ * Caller is responsible for:
+ *  Freeing all memory
+ */
 static bool solveBoardHelper(sudoku_t *b, int pos) {
 
   // Check number of zeros
@@ -279,11 +262,9 @@ static bool solveBoardHelper(sudoku_t *b, int pos) {
   // Number to place
   int currentVal = 1;
   b->board[r][c] = currentVal;
-  // printf("(%i, %i) -> [%i]\n", r, c, currentVal);
 
   while (isNumberPresent(b, r, c, currentVal) || !solveBoardHelper(b, pos + 1)) {
     b->board[r][c] = ++currentVal;
-    // printf("(%i, %i) -> [%i]\n", r, c, currentVal);
 
     if (currentVal > b->dimension) {
       b->board[r][c] = 0;
@@ -294,31 +275,36 @@ static bool solveBoardHelper(sudoku_t *b, int pos) {
   return true;
 }
 
-
-
+/*
+ * Checks if a number trying to be inserted is in the current row, column, or 3x3 grid
+ * 
+ * Caller provides:
+ *  A valid sudoku grid, row and column number, value to be inserted
+ * We guarantee:
+ *  Return true if value is already seen by cell, else return false if value can be inserted
+ * Caller is responsible for:
+ *  Freeing memory
+ */
 static bool isNumberPresent(sudoku_t *b, int r, int c, int v) {
-  if (checkRow(b, r, c, v)) { 
-    // printf("Row invalid\n");
-    return true;
-  }
-
-  if (checkCol(b, r, c, v)) {
-    // printf("Col invalid\n");
-    return true;
-  }
-
-  if (checkGrid(b, r, c, v)) {
-    // printf("Grid invalid\n");
-    return true;
-  }
+  if (checkRow(b, r, c, v)) return true;
+  if (checkCol(b, r, c, v)) return true;
+  if (checkGrid(b, r, c, v)) return true;
 
   return false;
 }
 
-
+/*
+ * Checks if a number trying to be inserted is in the current row
+ * 
+ * Caller provides:
+ *  A valid sudoku grid, row and column number, and value to be inserted
+ * We guarantee:
+ *  Return true if value is already seen by cell, else return false if value can be inserted
+ * Caller is responsible for:
+ *  Freeing memory
+ */
 static bool checkRow(sudoku_t *b, int r, int c, int v) {
   for (int j = 0; j < b->dimension; j++) {
-    // printf("ROW [%i] -> [%i] ?= [%i]\n", r, b->board[r][j], v);
     if (j == c) continue;
     if (b->board[r][j] == v) return true;
   }
@@ -326,7 +312,16 @@ static bool checkRow(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
-
+/*
+ * Checks if a number trying to be inserted is in the current column
+ * 
+ * Caller provides:
+ *  A valid sudoku grid, row and column number, and value to be inserted
+ * We guarantee:
+ *  Return true if value is already seen by cell, else return false if value can be inserted
+ * Caller is responsible for:
+ *  Freeing memory
+ */
 static bool checkCol(sudoku_t *b, int r, int c, int v) {
   for (int i = 0; i < b->dimension; i++) {
     if (i == r) continue;
@@ -336,15 +331,23 @@ static bool checkCol(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
-
+/*
+ * Checks if a number trying to be inserted is in the current 3x3 grid
+ * 
+ * Caller provides:
+ *  A valid sudoku grid, row and column number, and value to be inserted
+ * We guarantee:
+ *  Return true if value is already seen by cell, else return false if value can be inserted
+ * Caller is responsible for:
+ *  Freeing memory
+ */
 static bool checkGrid(sudoku_t *b, int r, int c, int v) {
-  int rStart = (int)(r / 3) * 3;
-  int cStart = (int)(c / 3) * 3;
+  int rStart = (int)(r / 3) * 3;      // gets beginning row position of current grid
+  int cStart = (int)(c / 3) * 3;      // gets beginning column position of current grid
 
   for (int i = rStart; i < rStart + 3; i++) {
     for (int j = cStart; j < cStart + 3; j++) {
       if (i == r && j == c) continue;
-      // printf("GRID (%i, %i) -> [%i] ?= [%i]\n", i, j, b->board[i][j], v);
       if (b->board[i][j] == v) return true;
     }
   }
@@ -352,10 +355,30 @@ static bool checkGrid(sudoku_t *b, int r, int c, int v) {
   return false;
 }
 
+/*
+ * Returns the row number of a cell in the 9x9 grid
+ * 
+ * Caller provides:
+ *  A valid sudoku board, a position from 0-80
+ * We guarantee:
+ *  Board is unchanged, returns current row
+ * Caller is responsible for:
+ *  Freeing memory
+ */
 static int findArrayRow(sudoku_t *b, int pos) {
   return (int)(pos / b->dimension);
 }
 
+/*
+ * Returns the column number of a cell in the 9x9 grid
+ * 
+ * Caller provides:
+ *  A valid sudoku board, a position from 0-80
+ * We guarantee:
+ *  Board is unchanged, returns current column
+ * Caller is responsible for:
+ *  Freeing memory
+ */
 static int findArrayCol(sudoku_t *b, int pos) {
   return (int)(pos % b->dimension);
 }
