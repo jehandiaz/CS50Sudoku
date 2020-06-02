@@ -14,7 +14,7 @@
 #include "board.h"
 #include "counters.h"
 
-int MIN_SPACES = 17;
+int MIN_SPACES = 25;
 
 /*********** prototypes **************/
 static int generateRandomNum(sudoku_t * b, int row, int column);
