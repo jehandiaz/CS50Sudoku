@@ -78,21 +78,7 @@ app.post('/solve', (req, res) => {
         resolve();
       });
       
-      // console.log('Sending stdin to terminal');
-      // terminal.stdin.write('echo "Hello $USER. Your machine runs since:"\n');
-      // terminal.stdin.write('uptime\n');
-      // terminal.stdin.write("ls -a -l\n");
-
       terminal.stdin.write(`cat ${boardFileName} | ../sudoku solve`);
-
-      // console.log(boardToString(board));
-      // terminal.stdin.write(boardToString(board));
-  
-      // console.log('done writing');
-      // terminal.stdin.write("\n");
-      // terminal.stdin.write("../sudoku solve");
-  
-      // console.log('Ending terminal session');
       terminal.stdin.end();
     }).then(() => {
       fs.unlink(boardFileName, (err) => {
