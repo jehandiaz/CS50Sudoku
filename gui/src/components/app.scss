@@ -1,0 +1,36 @@
+@import '../constants/variables.scss';
+
+$cell-dimension: 30px;
+
+.app-container {
+  width: 100%;
+
+  .app-board-container {
+    .app-board-row-container {
+      display: flex;
+      flex-direction: row;
+
+      .app-board-cell-container {
+        display: flex;
+        
+        color: green;
+        width: $cell-dimension;
+        height: $cell-dimension;
+
+        cursor: pointer;
+
+        &:hover {
+          background-color: deepskyblue;
+        }
+
+        &.highlighted {
+          background-color: gainsboro;
+        }
+
+        p {
+          margin: auto;
+        }
+      }
+    }
+  }
+}

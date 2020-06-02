@@ -31,18 +31,20 @@ router.post('/solve', (req, res) => {
 
   const { board } = req.body;
 
-  if (!board) return res.status(400).json({ message: 'Request does not include board in body' });
+  // console.log(req.body);
+
+  if (!board || !board.board || !board.dimension) return res.status(400).json({ message: 'Request does not include valid board in body' });
   // console.log(board);
 
   const boardFileName = `./tmp/${Date.now()}`;
   const boardString = boardToString(board);
-  // console.log("file name", boardFileName, boardString);
+  // console.log('file name', boardFileName, boardString);
   fs.writeFile(boardFileName, boardString, 'utf8', (error) => {
     if (error) {
       return res.status(500).json(error);
     }
 
-    // console.log("File written");
+    // console.log('File written');
 
     new Promise((resolve, reject) => {
       const terminal = spawn('bash');
@@ -53,13 +55,13 @@ router.post('/solve', (req, res) => {
       // Data handler for stdout
       terminal.stdout.on('data', (data) => {
         stdoutString += data.toString();
-        // console.log("stdout", data.toString());
+        // console.log('stdout', data.toString());
       });
 
       // Data handler for stdin
       terminal.stderr.on('data', (data) => {
         stderrString += data.toString();
-        // console.log("stderr", data.toString());
+        // console.log('stderr', data.toString());
       });
 
       // Process exit handler
@@ -74,6 +76,8 @@ router.post('/solve', (req, res) => {
       fs.unlink(boardFileName, (err) => {
         if (err) {
           return res.status(500).json(err);
+        } else if (exitCode !== 0) {
+          return res.status(500).json({ message: 'Couldn\'t solve board' });
         }
 
         return res.json({
@@ -115,6 +119,7 @@ function parseBoard(boardString) {
  */
 function boardToString(board) {
   let boardString = '';
+  console.log('found board');
 
   // Iterate through entire board and convert to string
   for (let i = 0; i < board.dimension; i += 1) {
