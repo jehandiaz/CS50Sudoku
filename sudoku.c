@@ -103,17 +103,6 @@ int main(int argc, char* argv[]) {
     // // printBoard(b, stdout);
     // // printf("---------\n");
 
-<<<<<<< HEAD
-    //FILE *fp = fopen("test.out", "w");
-    // if (!fp) return 4;
-
-    // for (int r = 0; r < b->dimension; r++) {
-    //     for (int c = 0; c < b->dimension; c++) {
-    //         b->board[r][c] = (rand()%9) + 1;
-    //     }
-    // }
-    //printBoard(b, fp);
-=======
     // FILE *fp = fopen("test.out", "w");
     // if (!fp) return 4;
 
@@ -123,47 +112,27 @@ int main(int argc, char* argv[]) {
     // //     }
     // // }
     // printBoard(b, fp);
->>>>>>> master
 
     // // removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
     // printf("Generated board\n");
     // printBoard(b, stdout);
     // printf("---------\n");
 
-<<<<<<< HEAD
-    deleteBoard(b);
-    //fclose(fp);
-=======
     // deleteBoard(b);
     // fclose(fp);
->>>>>>> master
 
     // // Test read from file
     // FILE *fr = fopen("test.out", "r");
     // if (!fr) return 5;
 
-<<<<<<< HEAD
-    b = loadBoard(fr);
-    if (!b) return 6;
-    fclose(fr);
-    printf("Loaded board: \n");
-    printBoard(b, stdout);
-=======
     // b = loadBoard(fr);
     // if (!b) return 6;
     // fclose(fr);
->>>>>>> master
 
     // printf("THIS SHOULD BE SOLVED PLZ\n");
     
-<<<<<<< HEAD
-    int solve = solveBoard(b);
-    if (solve) printf("Solved!! num of sols = %d\n", solve);
-    else printf("Stop that\n");
-=======
     // if (solveBoard(b)) printf("Solved!!\n");
     // else printf("Stop that\n");
->>>>>>> master
 
     // printf("Solved board\n");
     // printBoard(b, stdout);
@@ -179,11 +148,7 @@ int main(int argc, char* argv[]) {
 
     // printf("Re-solved board\n");
     // printBoard(b, stdout);
-<<<<<<< HEAD
-    deleteBoard(b);
-=======
     // deleteBoard(b);
->>>>>>> master
 
     return 0;
 }

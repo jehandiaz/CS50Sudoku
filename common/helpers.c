@@ -162,7 +162,7 @@ bool removeNumbers(sudoku_t *b, int n) {
     int dim2 = getRandNumber(0, b->dimension - 1);  // do it again
 
     // Skip any non-zero spaces
-    if (b->board[dim1][dim2]) continue;
+    if (!(b->board[dim1][dim2])) continue;
 
     int num = b->board[dim1][dim2];             // store number currently in random slot
     b->board[dim1][dim2] = 0;                   // remove number at randomly chosen slot by setting it to 0
@@ -375,7 +375,9 @@ int parseDifficulty(sudoku_t *b, int d) {
   const int minDifficulty = 1;
   const int maxDifficulty = 5;
   
-  if (!b || d < minDifficulty || d > maxDifficulty) return 0;
+  if (!b) return 0;
+  if (d < minDifficulty) d = 1;
+  if (d > maxDifficulty) d = 5;
 
   const int minToRemove = 10;
   const int maxToRemove = (b->dimension * b->dimension) - MIN_SPACES;
