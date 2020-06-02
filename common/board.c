@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
 /************ generateBoard ************/
 /*
  * Generates a blank 9x9 sudoku board filled with 0s
