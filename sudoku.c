@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     sudoku_t *b = NULL;
     if (strcmp(command, "create") == 0) {
         b = generateBoard();
-        if (!b) return 2;
+        if (!b) return 3;
 
 
         // Get required parameters for creating board
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
         if (populateTries == maxNumIterations) {
             fprintf(stderr, "Could not solve board, exiting...\n");
             deleteBoard(b);
-            return 3;
+            return 4;
         }
         
         // Hold until a valid board can be created by removing numbers
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
         FILE *loadFile = stdin;
 
         b = loadBoard(loadFile);
-        if (!b) return 2;
+        if (!b) return 3;
 
         int solveResult = solveBoard(b);
 
