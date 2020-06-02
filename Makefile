@@ -17,7 +17,10 @@ MAKE = make
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -o $(PROG)
 
-.PHONY: test clean
+.PHONY: lib test clean
+
+lib:
+	$(MAKE) -C common
 
 fuzztest: fuzztest.o
 	$(CC) $(CFLAGS) $^ $(LLIBS) -o $@
@@ -31,5 +34,5 @@ clean:
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROG)
 	rm -f fuzztest
-	rm -d core
 	$(MAKE) -C common clean
+	rm -f core
