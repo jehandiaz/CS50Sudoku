@@ -44,8 +44,6 @@ void generateRandomGrid(sudoku_t *b, int rStart, int cStart);
  */
 bool populateBoard(sudoku_t *b);
 
-// generates random grid, solve
-
 /************ removeNumbers ************/
 /*
  * Removes n numbers from a valid sudoku board and checks if board is still unique
@@ -57,7 +55,7 @@ bool populateBoard(sudoku_t *b);
  * We return:
  *  True if numbers removed successfully, false if too many iterations or board is non-unique
  * Caller is responsible for:
- *  Nothing
+ *  Freeing all memory
  */
 bool removeNumbers(sudoku_t *b, int n);
 
@@ -73,6 +71,24 @@ bool removeNumbers(sudoku_t *b, int n);
  *  Nothing
  */
 int solveBoard(sudoku_t *b);
+
+/**************** isUniqueBoard **************/
+/* 
+ * Returns the number of solutions that a sudoku grid has 
+ * 
+ * Caller provides: 
+ *  A valid sudoku grid, a position (0, 0) to start at, the number of solutions
+ * We guarantee: 
+ *  Returns 0 if no solutions, 1 if board has a unique solution, 2 if board 
+ *  has multiple solutions
+ *  The passed board is not changed 
+ * Caller is responsible for:
+ *  Calling deleteBoard
+ * 
+ * This code takes inspiration from:
+ *  https://stackoverflow.com/questions/24343214/determine-whether-a-sudoku-has-a-unique-solution
+ */
+int isUniqueBoard(int i, int j, sudoku_t* b, int count);
 
 /************ parseDifficulty ************/
 /*

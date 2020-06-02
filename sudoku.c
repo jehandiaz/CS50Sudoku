@@ -34,9 +34,11 @@ int main(int argc, char* argv[]) {
         b = generateBoard();
         if (!b) return 2;
 
+
         // Get required parameters for creating board
         int difficulty = argv[2] ? atoi(argv[2]) : DEFAULT_DIFFICULTY;
         int numToRemove = parseDifficulty(b, argv[2] ? atoi(argv[2]) : 3);
+        // int numToRemove = atoi(argv[2]);
         int maxNumIterations = argv[3] ? atoi(argv[3]) : MAX_ITERATIONS;
 
         printf("Selected difficulty [%i], removing [%i] numbers from board with [%i] maximum tries...\n", difficulty, numToRemove, maxNumIterations);
@@ -51,9 +53,10 @@ int main(int argc, char* argv[]) {
             deleteBoard(b);
             return 3;
         }
-
+        
         // Hold until a valid board can be created by removing numbers
         int removeTries = 0;
+        printf("num to be removed: %d\n", numToRemove);
         while (!removeNumbers(b, numToRemove) && removeTries < maxNumIterations) { printf("Re-attempting removeNumbers (%i)\n", removeTries++); }
 
         // If no valid solution was created, creating failed
@@ -63,9 +66,14 @@ int main(int argc, char* argv[]) {
             return 4;
         }
 
+        FILE *fp;
+        fp = fopen("test.out", "w");
+        printBoard(b, fp);
+        fclose(fp);
+
         printBoard(b, stdout);
         deleteBoard(b);
-
+    
     } else if (strcmp(command, "solve") == 0) {
         printf("Solve!\n");
 
@@ -103,17 +111,6 @@ int main(int argc, char* argv[]) {
     // // printBoard(b, stdout);
     // // printf("---------\n");
 
-<<<<<<< HEAD
-    //FILE *fp = fopen("test.out", "w");
-    // if (!fp) return 4;
-
-    // for (int r = 0; r < b->dimension; r++) {
-    //     for (int c = 0; c < b->dimension; c++) {
-    //         b->board[r][c] = (rand()%9) + 1;
-    //     }
-    // }
-    //printBoard(b, fp);
-=======
     // FILE *fp = fopen("test.out", "w");
     // if (!fp) return 4;
 
@@ -123,47 +120,27 @@ int main(int argc, char* argv[]) {
     // //     }
     // // }
     // printBoard(b, fp);
->>>>>>> master
 
     // // removeNumbers(b, argv[2] ? atoi(argv[2]) : 15);
     // printf("Generated board\n");
     // printBoard(b, stdout);
     // printf("---------\n");
 
-<<<<<<< HEAD
-    deleteBoard(b);
-    //fclose(fp);
-=======
     // deleteBoard(b);
     // fclose(fp);
->>>>>>> master
 
     // // Test read from file
     // FILE *fr = fopen("test.out", "r");
     // if (!fr) return 5;
 
-<<<<<<< HEAD
-    b = loadBoard(fr);
-    if (!b) return 6;
-    fclose(fr);
-    printf("Loaded board: \n");
-    printBoard(b, stdout);
-=======
     // b = loadBoard(fr);
     // if (!b) return 6;
     // fclose(fr);
->>>>>>> master
 
     // printf("THIS SHOULD BE SOLVED PLZ\n");
     
-<<<<<<< HEAD
-    int solve = solveBoard(b);
-    if (solve) printf("Solved!! num of sols = %d\n", solve);
-    else printf("Stop that\n");
-=======
     // if (solveBoard(b)) printf("Solved!!\n");
     // else printf("Stop that\n");
->>>>>>> master
 
     // printf("Solved board\n");
     // printBoard(b, stdout);
@@ -179,11 +156,7 @@ int main(int argc, char* argv[]) {
 
     // printf("Re-solved board\n");
     // printBoard(b, stdout);
-<<<<<<< HEAD
-    deleteBoard(b);
-=======
     // deleteBoard(b);
->>>>>>> master
 
     return 0;
 }
