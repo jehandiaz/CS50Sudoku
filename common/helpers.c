@@ -397,7 +397,6 @@ static int findArrayCol(sudoku_t *b, int pos) {
 int parseDifficulty(sudoku_t *b, int d) {
   const int minDifficulty = 1;
   const int maxDifficulty = 5;
-
   if (!b) return 0;
   if (d < minDifficulty) d = 1;
   if (d > maxDifficulty) d = 5;

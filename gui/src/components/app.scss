@@ -1,0 +1,121 @@
+@import '../constants/variables.scss';
+
+$board-dimension: 607px;
+$cell-dimension: 30px;
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
+
+  h1 {
+    text-align: center;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto 12px;
+
+    color: $text-gray;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+
+    input[type=number] { 
+      color: $text-gray;
+      font-size: 14px;
+      font-weight: normal;
+
+      -moz-appearance: textfield;
+      appearance: textfield;
+      margin: 0;
+
+      border: 1px solid $text-gray;
+      border-radius: 2px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+  }
+
+  button {
+    color: $white;
+    font-size: 16px;
+    font-weight: bold;
+    
+    background-color: $text-gray;
+    border: none;
+    border-radius: 2px;
+
+    margin: 0 auto 12px;
+    padding: 9px 24px;
+    cursor: pointer;
+  }
+
+  .app-board-container {
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+    width: $board-dimension;
+    height: $board-dimension;
+
+    background-color: $background;
+    box-shadow: $default-shadow;
+
+    .app-board-row-container {
+      display: flex;
+      flex-direction: row;
+      width: $board-dimension;
+      height: calc(#{$board-dimension} / 9);
+
+      &:first-child {
+        border-top: 2px solid $light-gray;
+      }
+
+      &:nth-child(3n) td {
+        border-bottom: 2px solid $light-gray;
+      }
+
+      .app-board-cell-container {
+        display: flex;
+
+        width: calc(#{$board-dimension} / 9);
+        height: calc(#{$board-dimension} / 9);
+
+        border: 1px solid $light-gray;
+        text-align: center;
+        cursor: pointer;
+        
+        &:first-child {
+          border-left: 2px solid $light-gray;
+        }
+
+        &:nth-child(3n) {
+          border-right: 2px solid $light-gray;
+        }
+
+        &:hover {
+          background-color: $yellow;
+        }
+
+        &.highlighted {
+          background-color: $white;
+        }
+      }
+    }
+
+    p {
+      color: $text-gray;
+      font-size: 42px;
+      font-weight: normal;
+      margin: auto;
+    }
+  }
+}
