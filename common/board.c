@@ -9,13 +9,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
-typedef struct sudoku {
-  int **board;   // Points to a 2D array of values holding the board
-  int dimension; // Tells parsers how long each row and column are
-} sudoku_t;
-
-
 /************ generateBoard ************/
 /*
  * Generates a blank 9x9 sudoku board filled with 0s
