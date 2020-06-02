@@ -14,6 +14,8 @@ class App extends React.Component {
     this.state = {
       posRow: -1,
       posCol: -1,
+
+      difficulty: 3,
     };
   }
 
@@ -53,11 +55,20 @@ class App extends React.Component {
       <div className="app-container">
         <h1>Team Rocket Sudoku Solver</h1>
 
-        <button type="button" onClick={() => this.props.createBoard(3)}>Create Board</button>
+        <button type="button" onClick={() => this.props.createBoard(this.state.difficulty)}>Create Board</button>
         <button type="button" onClick={() => this.props.solveBoard(this.props.board, this.props.dimension)}>Solve Board</button>
+
         {this.props.board && this.props.dimension
           ? this.renderBoard()
           : null}
+
+        <input
+          type="number"
+          min={1}
+          max={5}
+          value={this.state.difficulty}
+          onChange={e => this.setState({ difficulty: e.target.value })}
+        />
 
       </div>
     );
