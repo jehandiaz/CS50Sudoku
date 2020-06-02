@@ -1,15 +1,11 @@
 {
-  "name": "sudoku-gui",
+  "name": "gui",
   "version": "0.1.0",
   "private": true,
-  "license": "None",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "compression": "^1.7.4",
-    "express": "^4.17.1",
-    "handlebars": "^4.7.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
@@ -17,12 +13,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "start-server": "babel-node -- server/index.js",
-    "dev": "nodemon --exec babel-node server.js",
-    "webpack": "webpack -wd",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "babel-version": "babel --version"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,42 +30,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.4.3",
-    "@babel/node": "^7.8.7",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/plugin-transform-runtime": "^7.9.0",
-    "@babel/polyfill": "^7.8.7",
-    "@babel/preset-env": "^7.4.3",
-    "@babel/preset-react": "^7.0.0",
-    "autoprefixer": "^9.5.1",
-    "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.1.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react-app": "^9.1.2",
-    "css-loader": "^2.1.1",
-    "eslint": "^6.6.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-loader": "^2.1.2",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
-    "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "^0.5.0",
-    "node-sass": "^4.14.1",
-    "nodemon": "^2.0.4",
-    "npm-run-all": "^4.1.5",
-    "postcss-loader": "^3.0.0",
-    "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.1",
-    "surge": "^0.21.3",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.3.1",
-    "webpack-node-externals": "^1.7.2"
   }
 }
