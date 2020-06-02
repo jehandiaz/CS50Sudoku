@@ -19,7 +19,7 @@
 ./sudoku good stuff hahaha
 
 # invalid arguments
-./sudoku nice
+./sudoku cool
 
 ./sudoku team rocket
 
