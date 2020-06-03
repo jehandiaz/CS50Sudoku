@@ -88,10 +88,12 @@ int main(int argc, char* argv[]) {
         if (!solveResult) {
             fprintf(stderr, "Could not find any solutions to loaded board\n");
         } else if (solveResult == 1) {
-            // printf("Solved board!\n");
+            printf("Board has a unique solution.\n");
             printBoard(b, stdout);
         } else {
-            fprintf(stderr, "Board not unique\n");
+            printf("Board does not have a unique solution.\n");
+            printBoard(b, stdout);
+
         }
 
         deleteBoard(b);
