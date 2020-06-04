@@ -43,3 +43,6 @@ See testing.sh for the code used for a test and testing.out for the output of te
 See "TESTING.md" for a description of our testing.
 
 Note that `make lib` will compile the "common" directory from the main directory.
+
+### Presentation video link
+<https://drive.google.com/file/d/1fhIOPmWFc_cqkLia_pz_tlqTr02iAaYD/view?usp=sharing>
