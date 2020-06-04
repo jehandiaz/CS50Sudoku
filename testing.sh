@@ -42,32 +42,33 @@
 # create at level 5
 ./sudoku create 5
 
-# create at level oustide maximum range 5
+# create at level oustide range (7)
+# Might take a while, but that's okay.
 ./sudoku create 7
+
+# create at level oustide range (-3)
+./sudoku create -3
 
 ###########################################
 ### testing solve
 ###########################################
 
 # test from a file piped from the command line
-./sudoku solve < file1
+cat file1 | ./sukoku solve
 
-# test from stdin input by the user
-./sudoku solve
+###
+./sudoku solve < file1 
+
+# test from an already solved puzzle
+./sudoku solve < solveFile
 
 # test with non-unique grid
 ./sudoku solve < nonUniqueFile
 
-# test with a unique grid
-./sudoku solve < nonUniqueFile
+# test with a non-existing file
+./sudoku solve < fileAAA
 
-# test with a file containing ingeters outside the range (1-9)  ?????
-./sudoku solve < outsideRange
-
-# test with a invalid board (containing characters, )
-./sudoku solve < invalidBoard
-
-###########################################
+#########################################
 ### fuzz testing
 ###########################################
 
