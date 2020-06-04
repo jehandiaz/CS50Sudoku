@@ -40,11 +40,11 @@
 ./sudoku create 4
 
 # create at level 5
-./sudoku create 5
+# ./sudoku create 5
 
 # create at level oustide range (7)
 # Might take a while, but that's okay.
-./sudoku create 7
+# ./sudoku create 7
 
 # create at level oustide range (-3)
 ./sudoku create -3
@@ -54,7 +54,7 @@
 ###########################################
 
 # test from a file piped from the command line
-cat file1 | ./sukoku solve
+cat file1 | ./sudoku solve
 
 ###
 ./sudoku solve < file1 
