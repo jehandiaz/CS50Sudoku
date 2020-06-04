@@ -25,10 +25,10 @@ lib:
 fuzztest: fuzztest.o
 	$(CC) $(CFLAGS) $^ $(LLIBS) -o $@
 
-# test: $(PROG)
-#         echo "Running testing.sh, logging to testing.out..."
-#         bash -v testing.sh > /dev/null 2>&1
-#         echo "Test completed. Results can be found within testing.out."
+test: $(PROG)
+	echo "Running testing.sh, logging to testing.out..."
+	bash -v testing.sh > testing.out 2>&1
+	echo "Test completed. Results can be found within testing.out."
 
 clean:
 	rm -f *~ *.o *.dSYM

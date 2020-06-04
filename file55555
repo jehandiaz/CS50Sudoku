@@ -1,0 +1,253 @@
+switchml () {  typeset swfound=1;
+ if [ "${MODULES_USE_COMPAT_VERSION:-0}" = '1' ]; then
+ typeset swname='main';
+ if [ -e /usr/share/Modules/libexec/modulecmd.tcl ]; then
+ typeset swfound=0;
+ unset MODULES_USE_COMPAT_VERSION;
+ fi;
+ else
+ typeset swname='compatibility';
+ if [ -e /usr/share/Modules/libexec/modulecmd-compat ]; then
+ typeset swfound=0;
+ MODULES_USE_COMPAT_VERSION=1;
+ export MODULES_USE_COMPAT_VERSION;
+ fi;
+ fi;
+ if [ $swfound -eq 0 ]; then
+ echo "Switching to Modules $swname version";
+ source /usr/share/Modules/init/bash;
+ else
+ echo "Cannot switch to Modules $swname version, command not found";
+ return 1;
+ fi
+}
+module () {  unset _mlshdbg;
+ if [ "${MODULES_SILENT_SHELL_DEBUG:-0}" = '1' ]; then
+ case "$-" in 
+ *v*x*)
+ set +vx;
+ _mlshdbg='vx'
+ ;;
+ *v*)
+ set +v;
+ _mlshdbg='v'
+ ;;
+ *x*)
+ set +x;
+ _mlshdbg='x'
+ ;;
+ *)
+ _mlshdbg=''
+ ;;
+ esac;
+ fi;
+ unset _mlre _mlIFS;
+ if [ -n "${IFS+x}" ]; then
+ _mlIFS=$IFS;
+ fi;
+ IFS=' ';
+ for _mlv in ${MODULES_RUN_QUARANTINE:-};
+ do
+ if [ "${_mlv}" = "${_mlv##*[!A-Za-z0-9_]}" -a "${_mlv}" = "${_mlv#[0-9]}" ]; then
+ if [ -n "`eval 'echo ${'$_mlv'+x}'`" ]; then
+ _mlre="${_mlre:-}${_mlv}_modquar='`eval 'echo ${'$_mlv'}'`' ";
+ fi;
+ _mlrv="MODULES_RUNENV_${_mlv}";
+ _mlre="${_mlre:-}${_mlv}='`eval 'echo ${'$_mlrv':-}'`' ";
+ fi;
+ done;
+ if [ -n "${_mlre:-}" ]; then
+ eval `eval ${_mlre}/usr/bin/tclsh /usr/share/Modules/libexec/modulecmd.tcl bash '"$@"'`;
+ else
+ eval `/usr/bin/tclsh /usr/share/Modules/libexec/modulecmd.tcl bash "$@"`;
+ fi;
+ _mlstatus=$?;
+ if [ -n "${_mlIFS+x}" ]; then
+ IFS=$_mlIFS;
+ else
+ unset IFS;
+ fi;
+ unset _mlre _mlv _mlrv _mlIFS;
+ if [ -n "${_mlshdbg:-}" ]; then
+ set -$_mlshdbg;
+ fi;
+ unset _mlshdbg;
+ return $_mlstatus
+}
+#!/bin/bash
+# program name: testing.sh
+# author name: Team Rocket
+# date: May 6, 2020
+# Summary: test for sudoku.c
+#
+# Output: Into a file called testing.out
+
+# usage: bash -v testing.sh
+
+
+##########################################
+### Tests with invalid arguments
+##########################################
+
+# incorrect number of arguments
+./sudoku
+ERROR: Invalid number of arguments
+
+./sudoku good stuff hahaha
+ERROR: Command must be either 'create' or 'solve'
+
+# invalid arguments
+./sudoku cool
+ERROR: Command must be either 'create' or 'solve'
+
+./sudoku team rocket
+ERROR: Command must be either 'create' or 'solve'
+
+###########################################
+### testing create
+###########################################
+
+# create at level 1
+./sudoku create 1
+6 7 3 1 4 2 8 5 9 
+9 0 0 3 6 5 2 1 7 
+2 1 5 7 8 0 3 4 6 
+4 6 7 8 1 0 9 2 5 
+3 5 0 6 2 4 7 8 1 
+1 2 0 9 5 0 6 3 4 
+5 9 1 2 3 6 4 7 8 
+8 3 6 4 0 1 5 9 0 
+7 4 2 5 9 0 1 6 3 
+
+# create at level 2
+./sudoku create 2
+6 7 3 1 4 2 8 5 0 
+9 0 0 3 0 5 2 1 7 
+2 1 5 7 8 0 3 4 6 
+4 6 7 8 1 0 9 2 5 
+0 5 0 0 2 4 0 8 1 
+1 2 0 9 5 0 0 3 4 
+5 9 1 2 0 6 4 7 8 
+8 3 0 0 0 1 5 9 0 
+7 4 0 5 9 0 1 0 3 
+
+# create at level 3
+./sudoku create 3
+0 7 3 1 4 2 8 5 0 
+0 0 0 3 0 5 2 1 7 
+2 1 0 7 8 0 3 4 6 
+4 6 7 8 1 0 0 2 0 
+0 5 0 0 2 4 0 0 1 
+0 0 0 9 5 0 0 0 4 
+5 9 0 2 0 6 0 7 8 
+8 3 0 0 0 1 5 0 0 
+7 4 0 5 9 0 1 0 3 
+
+# create at level 4
+./sudoku create 4
+0 7 3 1 0 2 8 5 0 
+0 0 0 3 0 5 2 1 7 
+2 1 0 7 0 0 3 4 6 
+4 0 7 8 1 0 0 2 0 
+0 5 0 0 2 4 0 0 0 
+0 0 0 0 5 0 0 0 4 
+5 0 0 2 0 0 0 7 8 
+0 0 0 0 0 1 0 0 0 
+0 4 0 5 9 0 1 0 3 
+
+# create at level 5
+./sudoku create 5
+0 0 3 0 0 0 8 5 0 
+0 0 0 3 0 5 2 1 7 
+2 1 0 7 0 0 0 4 0 
+0 0 7 0 0 0 0 2 0 
+0 0 0 0 2 4 0 0 0 
+0 0 0 0 5 0 0 0 4 
+5 0 0 2 0 0 0 7 0 
+0 0 0 0 0 1 0 0 0 
+0 4 0 0 9 0 0 0 3 
+
+# create at level oustide range (7)
+./sudoku create 7
+0 0 3 0 0 0 8 5 0 
+0 0 0 3 0 5 2 1 7 
+2 1 0 7 0 0 0 4 0 
+0 0 7 0 0 0 0 2 0 
+0 0 0 0 2 4 0 0 0 
+0 0 0 0 5 0 0 0 4 
+5 0 0 2 0 0 0 7 0 
+0 0 0 0 0 1 0 0 0 
+0 4 0 0 9 0 0 0 3 
+
+# create at level oustide range (-3)
+./sudoku create -3
+6 7 3 1 4 2 8 5 9 
+9 0 0 3 6 5 2 1 7 
+2 1 5 7 8 0 3 4 6 
+4 6 7 8 1 0 9 2 5 
+3 5 0 6 2 4 7 8 1 
+1 2 0 9 5 0 6 3 4 
+5 9 1 2 3 6 4 7 8 
+8 3 6 4 0 1 5 9 0 
+7 4 2 5 9 0 1 6 3 
+
+###########################################
+### testing solve
+###########################################
+
+# test from a file piped from the command line
+cat file1 | ./sukoku solve
+testing.sh: line 56: ./sukoku: No such file or directory
+
+###
+./sudoku solve < file1 
+Board has a unique solution.
+9 7 6 2 1 3 5 8 4 
+2 8 3 5 4 6 1 7 9 
+5 1 4 8 9 7 3 6 2 
+1 6 9 4 7 2 8 5 3 
+4 5 8 1 3 9 6 2 7 
+3 2 7 6 5 8 9 4 1 
+6 4 1 3 2 5 7 9 8 
+8 9 2 7 6 1 4 3 5 
+7 3 5 9 8 4 2 1 6 
+
+# test from an already solved puzzle
+./sudoku solve < solveFile
+Board has a unique solution.
+9 7 6 2 1 3 5 8 4 
+2 8 3 5 4 6 1 7 9 
+5 1 4 8 9 7 3 6 2 
+1 6 9 4 7 2 8 5 3 
+4 5 8 1 3 9 6 2 7 
+3 2 7 6 5 8 9 4 1 
+6 4 1 3 2 5 7 9 8 
+8 9 2 7 6 1 4 3 5 
+7 3 5 9 8 4 2 1 6 
+
+# test with non-unique grid
+./sudoku solve < nonUniqueFile
+Board does not have a unique solution.
+2 8 6 1 5 9 7 4 3 
+3 5 4 7 6 8 9 1 2 
+7 1 9 2 4 3 5 6 8 
+8 2 3 6 1 5 4 9 7 
+6 9 7 8 2 4 1 3 5 
+1 4 5 3 9 7 8 2 6 
+5 6 8 9 3 1 2 7 4 
+4 3 1 5 7 2 6 8 9 
+9 7 2 4 8 6 3 5 1 
+
+# test with a non-existing file
+./sudoku solve < fileAAA
+testing.sh: line 68: fileAAA: No such file or directory
+
+#########################################
+### fuzz testing
+###########################################
+
+# fuzz testing solve with 1000 boards
+./fuzztest 1000
+Passed 1000/1000 tests!
+
+
