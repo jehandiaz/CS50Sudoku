@@ -16,7 +16,6 @@
 
 #include "board.h"
 #include "helpers.h"
-#include "counters.h"
 
 bool isBoardChanged(sudoku_t *b, sudoku_t *solved); 
 
