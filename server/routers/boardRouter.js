@@ -100,6 +100,8 @@ function parseBoard(boardString) {
     dimension: 0,
   };
 
+  console.log('board', boardString);
+
   // Parse board string to array of arrays
   let row = 0;
   for (let i = 0; i < boardString.length; i += 1) {
@@ -119,7 +121,6 @@ function parseBoard(boardString) {
  */
 function boardToString(board) {
   let boardString = '';
-  console.log('found board');
 
   // Iterate through entire board and convert to string
   for (let i = 0; i < board.dimension; i += 1) {

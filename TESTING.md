@@ -30,3 +30,4 @@ In that file one can see the command lines used for specific tests along with th
 ## Limitations
 
 * We assume that the file provided to `solve` contains a valid sudoku puzzle.
+* Difficulty level of five often takes a significant amount of time to run due to added complexities in generation
