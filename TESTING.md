@@ -1,9 +1,9 @@
-TESTING for sudoku.c
+# TESTING for sudoku.c
 
 Team Rocket
 Spring 2020
 
-## Testing of the program: 
+## Testing of the program
 
 In order to test all our modules, we performed the following tests:
 
@@ -15,7 +15,6 @@ In order to test all our modules, we performed the following tests:
 
 * *Fuzz testing* Use the provided `fuzztest.c` to test `sudoku solve`. Our `fuzztest.c` takes a number as argument and creates that many random puzzles, gives them to the solver, and prints the number of puzzles that were successfully solved.
 
-
 These tests can be found in `testing.sh`
 
 The output can be found in `testing.out`
@@ -26,8 +25,8 @@ An example test run is stored in `testing.out`, built with
 
 `make test`
 
-In that file one can see the command lines used for specific tests along with their output. 
+In that file one can see the command lines used for specific tests along with their output.  
 
 ## Limitations
 
-- We assume that the file provided to `solve` contains a valid sudoku puzzle.
+* We assume that the file provided to `solve` contains a valid sudoku puzzle.
